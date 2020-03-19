@@ -33,7 +33,7 @@ double MicrofacetBSDF::D(const Vector3D& h) {
   // TODO: proj3-2, part 3
   // Compute Beckmann normal distribution function (NDF) here.
   // You will need the roughness alpha.
-  return 0.0;
+  return std::pow(cos_theta(h), 100.0);;
 }
 
 Spectrum MicrofacetBSDF::F(const Vector3D& wi) {
@@ -54,7 +54,8 @@ Spectrum MicrofacetBSDF::sample_f(const Vector3D& wo, Vector3D* wi, float* pdf) 
   // *Importance* sample Beckmann normal distribution function (NDF) here.
   // Note: You should fill in the sampled direction *wi and the corresponding *pdf,
   //       and return the sampled BRDF value.
-  return Spectrum();
+  *wi = cosineHemisphereSampler.get_sample(pdf); //placeholder
+  return MicrofacetBSDF::f(wo, *wi);
 }
 
 // Refraction BSDF //
