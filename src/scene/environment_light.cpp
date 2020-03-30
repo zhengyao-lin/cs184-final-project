@@ -23,12 +23,18 @@ namespace CGL { namespace SceneObjects {
 
     std::cout << "[PathTracer] Initializing environment light...";
 
+    double sum = 0;
+    for (int j = 0; j < h; ++j) {
+        for (int i = 0; i < w; ++i) {
+            pdf_envmap[w * j + i] = envMap->data[w * j + i].illum() * sin(PI * (j+.5) / h);
+            sum += pdf_envmap[w * j + i];
+        }
+    }
+
+
     // TODO 3-2 Part 3 Task 3 Steps 1,2,3
-    // Store the environment map pdf to pdf_envmap
     // Store the marginal distribution for y to marginal_y
     // Store the conditional distribution for x given y to conds_y
-
-
 
 
 
