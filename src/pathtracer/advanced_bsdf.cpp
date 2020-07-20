@@ -35,20 +35,51 @@ double MicrofacetBSDF::D(const Vector3D& h) {
   // TODO: proj3-2, part 3
   // Compute Beckmann normal distribution function (NDF) here.
   // You will need the roughness alpha.
-  return std::pow(cos_theta(h), 100.0);;
+  // return std::pow(cos_theta(h), 100.0);;
+
+  double cos_theta_h = h.z;
+  double sin_theta_h = sqrt(1 - cos_theta_h * cos_theta_h);
+  double tan_theta_h = sin_theta_h / cos_theta_h;
+  double alpha_2 = alpha * alpha;
+  double cos_theta_h_2 = cos_theta_h * cos_theta_h;
+
+  return exp(-(tan_theta_h * tan_theta_h) / alpha_2)
+         / (PI * alpha_2 * cos_theta_h_2 * cos_theta_h_2);
+}
+
+inline double fresnel_channel(double eta, double k, double cos_theta_i) {
+  double r0 = eta * eta + k * k;
+  double cos_theta_i_2 = cos_theta_i * cos_theta_i;
+  double rs = (r0 - 2 * eta * cos_theta_i + cos_theta_i_2)
+            / (r0 + 2 * eta * cos_theta_i + cos_theta_i_2);
+  double rp = (r0 * cos_theta_i_2 - 2 * eta * cos_theta_i + 1)
+            / (r0 * cos_theta_i_2 + 2 * eta * cos_theta_i + 1);
+  return (rs + rp) * 0.5;
 }
 
 Spectrum MicrofacetBSDF::F(const Vector3D& wi) {
   // TODO: proj3-2, part 3
   // Compute Fresnel term for reflection on dielectric-conductor interface.
   // You will need both eta and etaK, both of which are Spectrum.
-  return Spectrum();
+
+  double cos_theta_i = cos_theta(wi);
+
+  return Spectrum(
+    fresnel_channel(eta.x, k.x, cos_theta_i),
+    fresnel_channel(eta.y, k.y, cos_theta_i),
+    fresnel_channel(eta.z, k.z, cos_theta_i)
+  );
 }
 
 Spectrum MicrofacetBSDF::f(const Vector3D& wo, const Vector3D& wi) {
   // TODO: proj3-2, part 3
   // Implement microfacet model here.
-  return Spectrum();
+
+  if (wo.z <= 0 || wi.z <= 0) return Spectrum();
+
+  Vector3D h = wo +  wi;
+  h.normalize();
+  return F(wi) * G(wo, wi) * D(h) / (4 * wo.z * wi.z); // normal = (0, 0, 1)
 }
 
 Spectrum MicrofacetBSDF::sample_f(const Vector3D& wo, Vector3D* wi, float* pdf) {
@@ -56,7 +87,40 @@ Spectrum MicrofacetBSDF::sample_f(const Vector3D& wo, Vector3D* wi, float* pdf) 
   // *Importance* sample Beckmann normal distribution function (NDF) here.
   // Note: You should fill in the sampled direction *wi and the corresponding *pdf,
   //       and return the sampled BRDF value.
-  *wi = cosineHemisphereSampler.get_sample(pdf); //placeholder
+  // *wi = cosineHemisphereSampler.get_sample(pdf); //placeholder
+  // return MicrofacetBSDF::f(wo, *wi);
+
+  const Vector2D& r = sampler.get_sample();
+
+  double alpha_2 = alpha * alpha;
+
+  double theta_h = atan(sqrt(-(alpha_2 * log(1 - r.x))));
+  double phi_h = 2 * PI * r.y;
+
+  double sin_theta_h = sin(theta_h);
+  double cos_theta_h = cos(theta_h);
+  double tan_theta_h = tan(theta_h);
+
+  Vector3D h(
+    sin_theta_h * cos(phi_h),
+    sin_theta_h * sin(phi_h),
+    cos_theta_h
+  );
+  h.normalize();
+
+  // reflect wo wrt h
+  *wi = -wo + 2 * dot(wo, h) * h;
+
+  if (wi->z <= 0) return Spectrum();
+
+  double p_theta_h = exp(-tan_theta_h * tan_theta_h / alpha_2) * (2 * sin_theta_h)
+                   / (alpha_2 * cos_theta_h * cos_theta_h * cos_theta_h);
+  double p_phi_h = 0.5 / PI;
+
+  double p_wi = p_theta_h * p_phi_h / (sin_theta_h * 4 * dot(*wi, h));
+
+  *pdf = p_wi;
+
   return MicrofacetBSDF::f(wo, *wi);
 }
 
