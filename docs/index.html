@@ -1,60 +1,623 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-<style>  
-    div.padded {  
-      padding-top: 0px;  
-      padding-right: 100px;  
-      padding-bottom: 0.25in;  
-      padding-left: 100px;  
-    }  
-  </style> 
-<title>Your Name  |  CS 184</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
-</head>
-<body>
-<br />
-<h1 align="middle">Assignment 3: PathTracer</h1>
-    <h2 align="middle">Your Name</h2>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Project 3-2: Pathtracer</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
 
-    <div class="padded">
-        <p>Use this section to write an overview of the assignment. All of the text in your write-up should be <em>in your own words</em>. If you need to add additional HTML features to this document, you can search the <a href="http://www.w3schools.com/">http://www.w3schools.com/</a> website for instructions. To edit the HTML, you can just copy and paste existing chunks and fill in the text and image file names appropriately.</p>
-        <o>The website writeup is intended to be a self-contained walkthrough of the assignment: we want this to be a piece of work which showcases your understanding of relevant concepts through both mesh images as well as written explanations about what you did to complete each part of the assignment. Try to be as clear and organized as possible when writing about your own output files or extensions to the assignment. We want to understand what you've achieved and how you've done it!</p> 
-        <p>If you are well-versed in web development, feel free to ditch this template and make a better looking page. Just make sure that you include all the components as we've laid them out here. </p>
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
 
-    <h2 align="middle">Part 1: Ray Generation and Intersection</h2>
-        <p>Describe what you did in Part 1. etc...</p>
-        <div align="center">
-            <table style="width=100%">
-                <tr>
-                    <td align="middle">
-                    <img src="images/example_image.png" width="480px" />
-                    <figcaption align="middle">Results Caption: my bunny is the bounciest bunny</figcaption>
-                </tr>
-            </table>
-        </div>
-        <p>Here is an example of how to include a simple formula:</p>
-        <p align="middle"><pre align="middle">a^2 + b^2 = c^2</pre></p>
-        <p>or, alternatively, you can include an SVG image of a LaTex formula.</p>
-        <p>This time it's your job to copy-paste in the rest of the sections :)</p>
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
 
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
 
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
 
-    <h2 align="middle">A Few Notes On Webpages</h2>
-        <p>Here are a few problems students have encountered in the past. You will probably encounter these problems at some point, so don't wait until right before the deadline to check that everything is working. Test your website on the instructional machines early!</p>
-        <ul>
-        <li>Your main report page should be called index.html.</li>
-        <li>Be sure to include and turn in all of the other files (such as images) that are linked in your report!</li>
-        <li>Use only <em>relative</em> paths to files, such as <pre>"./images/image.jpg"</pre>
-        Do <em>NOT</em> use absolute paths, such as <pre>"/Users/student/Desktop/image.jpg"</pre></li>
-        <li>Pay close attention to your filename extensions. Remember that on UNIX systems (such as the instructional machines), capitalization matters. <pre>.png != .jpeg != .jpg != .JPG</pre>
-        <li>Be sure to adjust the permissions on your files so that they are world readable. For more information on this please see this tutorial: <a href="http://www.grymoire.com/Unix/Permissions.html">http://www.grymoire.com/Unix/Permissions.html</a></li>
-        <li>And again, test your website on the instructional machines early!</li>
-</div>
-</body>
-</html>
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
 
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
 
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
 
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
 
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="3ce2e9f1-f507-45c3-9d1d-b0941eb8d485" class="page sans"><header><h1 class="page-title">Project 3-2: Pathtracer</h1></header><div class="page-body"><blockquote id="1329d0c9-7aa2-497e-ae02-e6b13d4a61d7" class="">Zhengyao Lin, CS 184 Summer 2020</blockquote><h2 id="8188dd38-36bc-44e3-ad93-82f5f7ec8fa8" class="">Overview</h2><p id="096911d0-ddfa-4dab-92cd-aff3e313c8b1" class="">I did the first two parts of the assignment on different BSDFs used to model materials. My main takeaway from this assignment is that using ray tracing/path tracing techniques, we can model many effects like reflection and refraction in an extremely natural way, which would be hard to do in the original rasterization pipeline. For example, to render mirror and glass materials, we only need to implement a different BSDF with some slight modification to the path tracing algorithm.</p><h2 id="9ca98b65-f4f9-436b-90ed-b1a07f6eb225" class="">Part 1: Mirror and Glass Materials</h2><p id="87c18a06-8721-434e-9a4f-6f955705b80b" class="">For the implication of these two BSDF&#x27;s, I basically copied the formulas from the spec:</p><ul id="7daaf5a5-3e7a-4219-bcfc-769ba941106b" class="bulleted-list"><li>For reflection, we can basically compute the reflected direction by<pre id="da0e1413-91ee-4978-b20f-8d3bf8aa4e6e" class="code"><code>*wi = Vector3D(-wo.x, -wo.y, 2 * wo.z - wo.z);</code></pre><p id="df6d8d29-69fc-4aa5-b0e4-7bd6091db162" class="">And use it in the <code>sample_f</code> function of the corresponding BSDF</p></li></ul><ul id="320bc886-5957-4448-9c3f-080a3bd35117" class="bulleted-list"><li>For refraction, I firsted implemented <code>BSDF::refract</code> and then <code>sample_f</code>, in which I used the Schlick&#x27;s approximation to determine the probability of fraction and reflection in the case of non-total internal reflection.</li></ul><p id="afe9a0d8-54e9-4de6-9eba-34dbf0d98def" class="">Here are some images of CBsphere.dae rendered with 64 samples per pixel, 4 light samples per intersection point, and max ray tracing depth of 0, 1, 2, 3, 4, 5, 100:</p><div id="ccecb0c7-fa00-448a-8bae-b8d05199f6b2" class="column-list"><div id="a99901fe-658f-489e-808c-1db19d60decf" style="width:50%" class="column"><figure id="9cfe9829-48be-410c-9634-5727a7db8df2" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-0.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-0.png"/></a><figcaption>max depth 0</figcaption></figure></div><div id="a9c48258-4c17-4933-a8a3-138923a17084" style="width:50%" class="column"><figure id="49179d1c-23a7-4570-b1d0-9107dd8d275a" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-1.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-1.png"/></a><figcaption>max depth 1</figcaption></figure></div></div><div id="636bab74-d075-423d-aa12-f5126aafbd46" class="column-list"><div id="1c3a6ab7-2415-4734-955f-1d4dab0f1e4c" style="width:50%" class="column"><figure id="a1b1ad5d-ae92-4fca-917e-03de14897d7b" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-2.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-2.png"/></a><figcaption>max depth 2</figcaption></figure></div><div id="94383ac2-c80d-4c92-a2b7-35df33d7fde6" style="width:50%" class="column"><figure id="dfd28525-68b6-4031-b00f-619e10582d3e" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-3.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-3.png"/></a><figcaption>max depth 3</figcaption></figure></div></div><div id="6089107a-0216-4306-97c0-b2045159c877" class="column-list"><div id="2f3fff36-c4b3-450a-acae-b8d3b161627a" style="width:50%" class="column"><figure id="047bbdee-cb91-4982-aa06-16779ab0cf11" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-4.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-4.png"/></a><figcaption>max depth 4</figcaption></figure></div><div id="18aceaff-d0ec-47a8-9be5-5ca2b70af1b4" style="width:50%" class="column"><figure id="da4e69ad-e539-4f7d-9c1b-2b096e86545b" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-5.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-5.png"/></a><figcaption>max depth 5</figcaption></figure></div></div><figure id="f9c0df18-d281-466d-8ef1-02d7d215dec7" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-100.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part1-CBspheres-64-4-100.png"/></a><figcaption>max depth 100</figcaption></figure><p id="359ece9e-61bf-405a-bd74-8ee84f9275e5" class="">It&#x27;s very interesting to see how different depth of ray tracing interacts with these materials. In the second image (depth 1), we can see that the reflection of light on the mirror ball is pretty complete while the same reflection on the glass ball is somewhat noisy. I think this is because when we do the Schlick&#x27;s approximation, we use a coin flip to determine if the sampled light should reflect or refract, so it takes a few iterations to converge to the last image. The main difference between the bounce-2 and bounce-3 images is that the ray coming from the back wall takes 3 bounces before hitting the camera, so the only thing we see in the bounce-2 image is the reflection in the reverse direction of the camera (so the image on the glass ball is similar to the mirror ball). Also, going from the bounce-3 image to the bounce-4 image, we can see a small highlight on the blue wall, which is coming from the light to the mirror ball, then across the glass ball to hit the blue wall, which takes in total 4 bounces.</p><h2 id="7f6a31ae-7f28-4042-886c-5be7be513522" class="">Part 2: Microfacet Material</h2><h3 id="aabda88a-e11b-498e-9bd3-774d1bfb562f" class="">Different <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">α</mi></mrow><annotation encoding="application/x-tex">\mathbf{\alpha}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.0037em;">α</span></span></span></span></span></span><span>﻿</span></span> values</h3><p id="128e0dc1-f86c-4ba9-af1e-bbd9b3644df4" class="">Here are the rendered images of CBdragon with different alpha values:</p><figure id="b583166e-5cb0-4848-b7bd-68dc2e4a6b9d" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBspheres-au-0.005-128-4-5.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBspheres-au-0.005-128-4-5.png"/></a><figcaption>alpha = 0.005</figcaption></figure><figure id="ec11e1f0-d1e4-412f-8d42-9eeaadf6ffe8" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBspheres-au-0.05-128-4-5.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBspheres-au-0.05-128-4-5.png"/></a><figcaption>alpha = 0.05</figcaption></figure><figure id="b5299506-77c0-4725-8b6e-c3b68d77497f" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBspheres-au-0.25-128-4-5.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBspheres-au-0.25-128-4-5.png"/></a><figcaption>alpha = 0.25</figcaption></figure><figure id="00b6a2fa-f40e-4b3e-81fc-2ee344e06a97" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBspheres-au-0.5-128-4-5.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBspheres-au-0.5-128-4-5.png"/></a><figcaption>alpha = 0.5</figcaption></figure><p id="b40c218f-0b9b-4ebb-be97-a0083666299a" class="">With higher alpha value, we can see that the surface looks more like diffuse materials that have no clear reflection, while with very small alpha values, the surface almost looks like a mirror.</p><h2 id="db49f26f-01c6-4c1a-9ffd-b018928804ca" class="">Importance sampling</h2><p id="ff229c4c-3cc2-4bb1-b140-56609fac689c" class="">Here is also a comparison between rendering with and without importance sampling specific to the Beckmann distribution:</p><figure id="2dda6b58-3a50-41fd-a359-0723324ae6a3" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBbunny-cu-64-1-5-importance.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBbunny-cu-64-1-5-importance.png"/></a><figcaption>with importance sampling</figcaption></figure><figure id="19dfb82f-1476-4bc7-91a2-74d23b5ea38e" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBbunny-cu-64-1-5-hemisphere.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBbunny-cu-64-1-5-hemisphere.png"/></a><figcaption>without importance sampling</figcaption></figure><p id="67cea48a-fb17-40b0-9aaf-2c9378af4a1b" class="">We can see without importance sampling, when the number of light samples is small, the bunny becomes quite noisy.</p><h3 id="66abb577-a414-4582-b605-fedbf65cb113" class="">Different <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi></mrow><annotation encoding="application/x-tex">\eta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">η</span></span></span></span></span><span>﻿</span></span> and <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span></span><span>﻿</span></span></h3><p id="cbb00df2-e6ce-4e0c-926d-291556072937" class="">I also tried a few other parameters and here are the results:</p><ul id="62ff8a20-476a-409b-870e-12ff689b54d3" class="bulleted-list"><li>This is Mercury/Hg with alpha 0.0005</li></ul><figure id="32727d21-2ff9-48c5-abf1-6d4f9a44945a" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBdragon-hg-0.0005.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBdragon-hg-0.0005.png"/></a></figure><p id="6a3d7ae8-8910-4668-a852-82642d21b853" class="">
+</p><ul id="437e7e1f-1b3f-444f-b758-4e17b1a23841" class="bulleted-list"><li>I also tried PVC but it did not turn out well. I&#x27;m guessing there are some refraction under the surface that I&#x27;m not considering here.</li></ul><figure id="5f231353-2a28-4a83-a459-ab0fde989e40" class="image"><a href="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBdragon-pvc-0.0005.png"><img style="width:800px" src="Project%203%202%20Pathtracer%209cfe982948be410c96345727a7db8df2/part2-CBdragon-pvc-0.0005.png"/></a></figure></div></article></body></html>
