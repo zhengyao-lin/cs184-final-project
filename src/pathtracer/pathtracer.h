@@ -42,7 +42,7 @@ namespace CGL {
          */
         void clear();
 
-        void autofocus(Vector2D loc);
+        void autofocus(Vector2D loc) {}
 
         /**
          * Trace an ray in the scene.
@@ -53,8 +53,10 @@ namespace CGL {
         Spectrum est_radiance_global_illumination(const Ray& r);
         Spectrum zero_bounce_radiance(const Ray& r, const SceneObjects::Intersection& isect);
         Spectrum one_bounce_radiance(const Ray& r, const SceneObjects::Intersection& isect);
-        Spectrum at_least_one_bounce_radiance(const Ray& r, const SceneObjects::Intersection& isect);
         
+        Spectrum at_least_one_bounce_radiance(const Ray& r, const SceneObjects::Intersection& isect);
+        Spectrum at_least_one_bounce_radiance(const Ray &r, const SceneObjects::Intersection &isect, size_t current_depth);
+
         Spectrum debug_shading(const Vector3D& d) {
             return Vector3D(abs(d.r), abs(d.g), .0).unit();
         }

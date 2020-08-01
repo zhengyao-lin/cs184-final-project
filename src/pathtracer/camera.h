@@ -9,6 +9,7 @@
 #include "math.h"
 #include "ray.h"
 
+#include "lens/lens.h"
 
 namespace CGL {
 
@@ -93,6 +94,12 @@ class Camera {
   // Lens aperture and focal distance for depth of field effects.
   double lensRadius;
   double focalDistance;
+
+  // // a set of lenses to choose from
+  // std::vector<Lens> lenses;
+
+  // // current lens index
+  // int current_lens;
 
  private:
   // Computes pos, screenXDir, screenYDir from target, r, phi, theta.
