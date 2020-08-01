@@ -523,11 +523,12 @@ void Application::mouse_pressed(e_mouse_button b) {
   switch (b) {
     case LEFT:
       if (mode == EDIT_MODE) {
-        if (scene->has_hover()) {
-          scene->confirm_selection();
-        } else {
-          scene->invalidate_selection();
-        }
+        // if (scene->has_hover()) {
+        //   scene->confirm_selection();
+        // } else {
+        //   scene->invalidate_selection();
+        // }
+        scene->invalidate_selection();
       } else if (mode == RENDER_MODE && renderer->render_cell) {
         renderer->cell_tl = Vector2D(mouseX, screenH - mouseY);
         renderer->cell_br = renderer->cell_tl;

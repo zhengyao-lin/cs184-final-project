@@ -24,7 +24,40 @@ Ray Camera::generate_ray_for_thin_lens(double x, double y, double rndR, double r
   // compute position and direction of ray from the input sensor sample coordinate.
   // Note: use rndR and rndTheta to uniformly sample a unit disk.
 
-  return Ray();
+  // compute the chef ray
+  double h_fov_radian = hFov * PI / 180;
+  double v_fov_radian = vFov * PI / 180;
+
+  double w_half = tan(h_fov_radian / 2);
+  double h_half = tan(v_fov_radian / 2);
+
+  Vector3D sensor_in_camera(
+    w_half - x * w_half * 2,
+    h_half - y * h_half * 2,
+    1
+  );
+
+  // intersect with the focal plane
+  Vector3D focal_point = sensor_in_camera * -focalDistance;
+
+  // get the sample point on the lens
+  double sample_x = lensRadius * sqrt(rndR) * cos(rndTheta);
+  double sample_y = lensRadius * sqrt(rndR) * sin(rndTheta);
+
+  Vector3D position_on_lens = Vector3D(sample_x, sample_y, 0);
+
+  // actual sampled ray direction
+  Vector3D sample_ray_direction = focal_point - position_on_lens;
+
+  // transform that to the world space
+  Vector3D world_sensor_direction = c2w * sample_ray_direction;
+  world_sensor_direction.normalize();
+
+  Ray ray(pos + position_on_lens, world_sensor_direction);
+  ray.min_t = nClip;
+  ray.max_t = fClip;
+
+  return ray;
 }
 
 
