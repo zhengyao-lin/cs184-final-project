@@ -6,7 +6,7 @@ project(Assignment3)
 #-------------------------------------------------------------------------------
 option(BUILD_DEBUG     "Build with debug settings"    OFF)
 option(BUILD_DOCS      "Build documentation"          OFF)
-option(BUILD_CUSTOM    "Build without reference"      OFF)
+option(BUILD_CUSTOM    "Build without reference"      ON)
 
 if (MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D__SOLUTIONS__=50")
