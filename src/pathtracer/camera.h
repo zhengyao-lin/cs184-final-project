@@ -18,6 +18,8 @@ namespace CGL {
  */
 class Camera {
  public:
+  Camera();
+
   /*
     Sets the field of view to match screen screenW/H.
     NOTE: data and screenW/H will almost certainly disagree about the aspect
@@ -95,11 +97,23 @@ class Camera {
   double lensRadius;
   double focalDistance;
 
-  // // a set of lenses to choose from
-  // std::vector<Lens> lenses;
+  // a set of lenses to choose from
+  std::vector<Lens> lenses;
 
-  // // current lens index
-  // int current_lens;
+  // current lens index
+  // -1 if we are not using compound lenses
+  int current_lens = 0;
+
+  Lens *get_current_lens() {
+    if (current_lens < 0 || current_lens >= lenses.size()) return NULL;
+    return &lenses[current_lens];
+  }
+
+  void mount_lens(int idx) {
+    if (idx >= 0 && idx < lenses.size()) {
+      current_lens = idx;
+    }
+  }
 
  private:
   // Computes pos, screenXDir, screenYDir from target, r, phi, theta.

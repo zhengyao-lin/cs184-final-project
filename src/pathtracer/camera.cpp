@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <filesystem>
 
 #include "CGL/misc.h"
 #include "CGL/vector3D.h"
@@ -14,9 +15,19 @@ using std::min;
 using std::ifstream;
 using std::ofstream;
 
+// TODO: hard-coded right now
+#define LENSES_DIR "lenses"
+
 namespace CGL {
 
 using Collada::CameraInfo;
+
+Camera::Camera() {
+  // load all lenses
+  for (const auto &entry : std::filesystem::directory_iterator(LENSES_DIR)) {
+    lenses.emplace_back(entry.path());
+  }
+}
 
 /**
  * Sets the field of view to match screen screenW/H.
