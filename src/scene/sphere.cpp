@@ -18,7 +18,7 @@ bool Sphere::test(const Ray &r, double &t1, double &t2) const {
   return true;
 }
 
-inline bool ray_sphere_intersection(
+bool Sphere::intersect(
   double radius,
   const Vector3D &center,
   const Ray &r,
@@ -49,7 +49,7 @@ bool Sphere::has_intersection(const Ray &ray) const {
   // Note that you might want to use the the Sphere::test helper here.
 
   double t;
-  if (!ray_sphere_intersection(r, o, ray, t)) return false;
+  if (!intersect(r, o, ray, t)) return false;
   ray.max_t = t;
   return true;
 }
@@ -63,7 +63,7 @@ bool Sphere::intersect(const Ray &ray, Intersection *isect) const {
   // correspondingly.
 
   double t;
-  if (!ray_sphere_intersection(r, o, ray, t)) return false;
+  if (!intersect(r, o, ray, t)) return false;
 
   Vector3D intersection_pt = ray.at_time(t);
   Vector3D normal = intersection_pt - o;

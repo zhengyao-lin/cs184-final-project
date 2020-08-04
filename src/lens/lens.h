@@ -12,16 +12,16 @@
 
 namespace CGL {
 
+// abstraction for a surface in the lens system
 struct LensElement {
 public:
   bool pass_through(Ray &r, double &prev_ior) const;
-  double center;
+  bool is_stop() const { return radius == 0; }
+
+  double center; // the z coordinate of the center of the circle/sphere
   double radius;
   double ior;
   double aperture;
-private:
-  bool intersect(const Ray &r, Vector3D *hit_p) const;
-  bool refract(Ray& r, const Vector3D& hit_p, const double& prev_ior) const;
 };
 
 struct Lens {
@@ -39,6 +39,8 @@ struct Lens {
   Vector3D back_lens_sample() const;
 
   mutable std::vector<LensElement> elts;
+  mutable std::vector<LensElement> backward_elts;
+
   double back_elt, infinity_focus, near_focus, focal_length;
   double ap_radius, ap_original;
   size_t ap_i;

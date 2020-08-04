@@ -82,6 +82,13 @@ class Sphere : public Primitive {
   */
   void drawOutline(const Color& c, float alpha) const;
 
+  static bool intersect(
+    double radius,
+    const Vector3D &center,
+    const Ray &r,
+    double &t
+  );
+
  private:
 
   /**
