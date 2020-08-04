@@ -22,7 +22,8 @@ bool Sphere::intersect(
   double radius,
   const Vector3D &center,
   const Ray &r,
-  double &t
+  double &t1,
+  double &t2
 ) {
   Vector3D o_to_center = r.o - center;
 
@@ -33,13 +34,10 @@ bool Sphere::intersect(
   double delta = b * b - 4 * a * c;
   if (delta < 0) return false;
 
-  t = (-b - sqrt(delta)) / (2 * a);
-  if (t >= r.min_t && t <= r.max_t) return true;
+  t1 = (-b - sqrt(delta)) / (2 * a);
+  t2 = (-b + sqrt(delta)) / (2 * a);
 
-  t = (-b + sqrt(delta)) / (2 * a);
-  if (t >= r.min_t && t <= r.max_t) return true;
-
-  return false;
+  return true;
 }
 
 bool Sphere::has_intersection(const Ray &ray) const {
@@ -48,10 +46,20 @@ bool Sphere::has_intersection(const Ray &ray) const {
   // Implement ray - sphere intersection.
   // Note that you might want to use the the Sphere::test helper here.
 
-  double t;
-  if (!intersect(r, o, ray, t)) return false;
-  ray.max_t = t;
-  return true;
+  double t1, t2;
+  if (!intersect(r, o, ray, t1, t2)) return false;
+
+  if (t1 >= ray.min_t && t1 <= ray.max_t) {
+    ray.max_t = t1;
+    return true;
+  }
+
+  if (t2 >= ray.min_t && t2 <= ray.max_t) {
+    ray.max_t = t2;
+    return true;
+  }
+
+  return false;
 }
 
 bool Sphere::intersect(const Ray &ray, Intersection *isect) const {
@@ -62,8 +70,15 @@ bool Sphere::intersect(const Ray &ray, Intersection *isect) const {
   // When an intersection takes place, the Intersection data should be updated
   // correspondingly.
 
+  double t1, t2;
   double t;
-  if (!intersect(r, o, ray, t)) return false;
+  if (!intersect(r, o, ray, t1, t2)) return false;
+
+  if (t1 >= ray.min_t && t1 <= ray.max_t) {
+    t = t1;
+  } else if (t2 >= ray.min_t && t2 <= ray.max_t) {
+    t = t2;
+  } else return false;
 
   Vector3D intersection_pt = ray.at_time(t);
   Vector3D normal = intersection_pt - o;

@@ -10,8 +10,15 @@
 #include "ray.h"
 
 #include "lens/lens.h"
+#include "sampler.h"
 
 namespace CGL {
+
+enum class CameraModel {
+  PINHOLE,
+  THIN_LENS,
+  COMPOUND_LENS,
+};
 
 /**
  * Camera.
@@ -79,30 +86,27 @@ class Camera {
   virtual void dump_settings(std::string filename);
   virtual void load_settings(std::string filename);
 
-  /**
-   * Returns a world-space ray from the camera that corresponds to a
-   * ray exiting the camera that deposits light at the sensor plane
-   * position given by (x,y).  x and y are provided in the normalized
-   * coordinate space of the sensor.  For example (0.5, 0.5)
-   * corresponds to the middle of the screen.
-   *
-   * \param x x-coordinate of the ray sample in the view plane
-   * \param y y-coordinate of the ray sample in the view plane
-   */
-  Ray generate_ray(double x, double y) const;
+  // sample a ray to the world
+  bool generate_ray(Ray &ray, double &coeff, double x, double y) const;
+  bool generate_ray_for_pinhole(Ray &ray, double &coeff, double x, double y) const;
+  bool generate_ray_for_thin_lens(Ray &ray, double &coeff, double x, double y) const;
+  bool generate_ray_for_compound_lens(Ray &ray, double &coeff, double x, double y) const;
 
-  Ray generate_ray_for_thin_lens(double x, double y, double rndR, double rndTheta) const;
+  CameraModel model = CameraModel::COMPOUND_LENS;
 
-  // Lens aperture and focal distance for depth of field effects.
+  // parameters for the thin lens model
   double lensRadius;
   double focalDistance;
 
-  // a set of lenses to choose from
+  // parameters for compound lenses
   std::vector<Lens> lenses;
+  int current_lens = 2;
+  int max_lens_sample_attempts = 20;
 
-  // current lens index
-  // -1 if we are not using compound lenses
-  int current_lens = 0;
+  const Lens *get_current_lens() const {
+    if (current_lens < 0 || current_lens >= lenses.size()) return NULL;
+    return &lenses[current_lens];
+  }
 
   Lens *get_current_lens() {
     if (current_lens < 0 || current_lens >= lenses.size()) return NULL;
@@ -137,6 +141,8 @@ class Camera {
   // of view at some distance.
   size_t screenW, screenH;
   double screenDist;
+
+  UniformGridSampler2D gridSampler;
 };
 
 } // namespace CGL

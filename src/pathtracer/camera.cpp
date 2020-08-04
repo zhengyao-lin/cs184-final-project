@@ -4,6 +4,7 @@
 #include <sstream>
 #include <fstream>
 #include <filesystem>
+#include <cassert>
 
 #include "CGL/misc.h"
 #include "CGL/vector3D.h"
@@ -205,8 +206,20 @@ void Camera::load_settings(string filename) {
  * \param x x-coordinate of the pixel in normalized image space
  * \param y y-coordinate of the pixel in normalized image space
  */
-Ray Camera::generate_ray(double x, double y) const {
+bool Camera::generate_ray(Ray &ray, double &coeff, double x, double y) const {
+  switch (model) {
+    case CameraModel::PINHOLE:
+      return generate_ray_for_pinhole(ray, coeff, x, y);
+    case CameraModel::THIN_LENS:
+      return generate_ray_for_pinhole(ray, coeff, x, y);
+    case CameraModel::COMPOUND_LENS:
+      return generate_ray_for_compound_lens(ray, coeff, x, y);
+  }
+  assert(false && "unexpected camera model");
+}
 
+// generate a ray for the pinhole model
+bool Camera::generate_ray_for_pinhole(Ray &ray, double &coeff, double x, double y) const {
   // TODO (Part 1.2):
   // compute position of the input sensor sample coordinate on the
   // canonical sensor plane one unit away from the pinhole.
@@ -229,12 +242,107 @@ Ray Camera::generate_ray(double x, double y) const {
   Vector3D world_sensor_direction = c2w * sensor_in_camera;
   world_sensor_direction.normalize();
 
-  Ray ray(pos, world_sensor_direction);
+  ray = Ray(pos, world_sensor_direction);
+  ray.min_t = nClip;
+  ray.max_t = fClip;
+  coeff = 1;
+  return true;
+}
+
+bool Camera::generate_ray_for_thin_lens(Ray &ray, double &coeff, double x, double y) const {
+  // Part 2, Task 4:
+  // compute position and direction of ray from the input sensor sample coordinate.
+  // Note: use rndR and rndTheta to uniformly sample a unit disk.
+
+  Vector2D lens_sample = gridSampler.get_sample();
+  double rndR = lens_sample.x;
+  double rndTheta = lens_sample.y * 2.0 * PI;
+
+  // compute the chef ray
+  double h_fov_radian = hFov * PI / 180;
+  double v_fov_radian = vFov * PI / 180;
+
+  double w_half = tan(h_fov_radian / 2);
+  double h_half = tan(v_fov_radian / 2);
+
+  Vector3D sensor_in_camera(
+    w_half - x * w_half * 2,
+    h_half - y * h_half * 2,
+    1
+  );
+
+  // intersect with the focal plane
+  Vector3D focal_point = sensor_in_camera * -focalDistance;
+
+  // get the sample point on the lens
+  double sample_x = lensRadius * sqrt(rndR) * cos(rndTheta);
+  double sample_y = lensRadius * sqrt(rndR) * sin(rndTheta);
+
+  Vector3D position_on_lens = Vector3D(sample_x, sample_y, 0);
+
+  // actual sampled ray direction
+  Vector3D sample_ray_direction = focal_point - position_on_lens;
+
+  // transform that to the world space
+  Vector3D world_sensor_direction = c2w * sample_ray_direction;
+  world_sensor_direction.normalize();
+
+  ray = Ray(pos + position_on_lens, world_sensor_direction);
+  ray.min_t = nClip;
+  ray.max_t = fClip;
+  coeff = 1;
+  return true;
+}
+
+bool Camera::generate_ray_for_compound_lens(Ray &ray, double &coeff, double x, double y) const {
+  const Lens *lens = get_current_lens();
+  assert(lens && "no current lens");
+
+  // sample a point on the rearest lens
+  Vector3D sample = lens->back_lens_sample();
+
+  // compute the chef ray
+  double h_fov_radian = hFov * PI / 180;
+  double v_fov_radian = vFov * PI / 180;
+
+  double w_half = tan(h_fov_radian / 2) * lens->sensor_depth;
+  double h_half = tan(v_fov_radian / 2) * lens->sensor_depth;
+
+  // generate a ray from x, y on the sensor plane (at sensor_depth)
+  Vector3D sensor_position(
+    w_half - x * w_half * 2,
+    h_half - y * h_half * 2,
+    lens->sensor_depth
+  );
+
+  Vector3D direction = sample - sensor_position;
+  direction.normalize();
+
+  Ray sensor_ray(sensor_position, direction);
+
+  // (cos theta)^4 for an unbiased estimate of the radiance
+  coeff = direction.z;
+  coeff *= coeff;
+  coeff *= coeff;
+
+  // trace the sensor ray through the compound lens
+  if (!lens->trace(sensor_ray, NULL)) {
+    return false;
+  }
+
+  Vector3D world_direction = c2w * sensor_ray.d;
+  world_direction.normalize();
+
+  ray = Ray(pos + c2w * sensor_ray.o * 0.001 /* from mm to meters */, world_direction);
   ray.min_t = nClip;
   ray.max_t = fClip;
 
-  return ray;
-}
+  // printf("sampled ray: (%lf, %lf, %lf) -> (%lf, %lf, %lf)\n",
+  //   ray.o.x, ray.o.y, ray.o.z,
+  //   ray.d.x, ray.d.y, ray.d.z
+  // );
 
+  return true;
+}
 
 } // namespace CGL

@@ -549,13 +549,21 @@ void RaytracedRenderer::key_press(int key) {
     pt->camera->lensRadius = pt->camera->lensRadius + 0.05;
     fprintf(stdout, "[PathTracer] Camera lens radius increased to %f.\n", pt->camera->lensRadius);
     break;
+  // case ';':
+  //   pt->camera->focalDistance = std::max(pt->camera->focalDistance - 0.1, 0.0);
+  //   fprintf(stdout, "[PathTracer] Camera focal distance reduced to %f.\n", pt->camera->focalDistance);
+  //   break;
+  // case '\'':
+  //   pt->camera->focalDistance = pt->camera->focalDistance + 0.1;
+  //   fprintf(stdout, "[PathTracer] Camera focal distance increased to %f.\n", pt->camera->focalDistance);
+  //   break;
   case ';':
-    pt->camera->focalDistance = std::max(pt->camera->focalDistance - 0.1, 0.0);
-    fprintf(stdout, "[PathTracer] Camera focal distance reduced to %f.\n", pt->camera->focalDistance);
+    pt->camera->get_current_lens()->sensor_depth -= 1;
+    cout << "[PathTracer] Camera sensor depth decreased to " << pt->camera->get_current_lens()->sensor_depth << endl;
     break;
   case '\'':
-    pt->camera->focalDistance = pt->camera->focalDistance + 0.1;
-    fprintf(stdout, "[PathTracer] Camera focal distance increased to %f.\n", pt->camera->focalDistance);
+    pt->camera->get_current_lens()->sensor_depth += 1;
+    cout << "[PathTracer] Camera sensor depth increased to " << pt->camera->get_current_lens()->sensor_depth << endl;
     break;
   case KEYBOARD_UP:
     if (current != bvh->get_root()) {

@@ -86,7 +86,8 @@ class Sphere : public Primitive {
     double radius,
     const Vector3D &center,
     const Ray &r,
-    double &t
+    double &t1,
+    double &t2
   );
 
  private:

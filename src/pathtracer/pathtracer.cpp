@@ -305,23 +305,18 @@ void PathTracer::raytrace_pixel(size_t x, size_t y) {
     for (; j < samplesPerBatch && i + j < num_samples; j++) {
       // pdf at each point is just 1 so no need to divide
       Vector2D sample = origin + gridSampler->get_sample();
-      Vector2D lens_sample = gridSampler->get_sample();
 
       // normalize sample position
-    
-      Ray ray = camera->generate_ray_for_thin_lens(
-        sample.x / sampleBuffer.w,
-        sample.y / sampleBuffer.h,
-        lens_sample.x,
-        lens_sample.y * 2.0 * PI
-      );
-      // Ray ray = camera->generate_ray(
-      //   sample.x / sampleBuffer.w,
-      //   sample.y / sampleBuffer.h
-      // );
-      
-      Spectrum sample_radiance = est_radiance_global_illumination(ray);
-      sum += sample_radiance;
+      Ray ray; double coeff;
+      Spectrum sample_radiance;
+
+      if (camera->generate_ray(ray, coeff, sample.x / sampleBuffer.w, sample.y / sampleBuffer.h)) {
+        sample_radiance = est_radiance_global_illumination(ray) * coeff;
+        sum += sample_radiance;
+        // printf("sampled radiance: (%lf, %lf, %lf)\n",
+        //   sample_radiance.x, sample_radiance.y, sample_radiance.z
+        // );
+      } // otherwise we failed to sample the ray (because, for example, the ray got out of the compound lens)
 
       float illum = sample_radiance.illum();
       sum_illum += illum;

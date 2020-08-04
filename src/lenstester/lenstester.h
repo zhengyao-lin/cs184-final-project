@@ -49,7 +49,7 @@ class LensTester : public Renderer {
 
 private:
 
-  void draw_lens(Lens &lens) ;
+  void draw_lens(const Lens &lens) ;
   void draw_trace(vector<Vector3D> &trace);
 
   // Internal event system //

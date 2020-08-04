@@ -8,7 +8,7 @@ using namespace std;
 namespace CGL {
 
 LensTester::LensTester() {
-  Lens *lens = camera.get_current_lens();
+  const Lens *lens = camera.get_current_lens();
   assert(lens && "no current lens");
 
   double front = fabs(lens->elts.back().center - lens->elts.back().radius);
@@ -39,7 +39,7 @@ void LensTester::init() {
 
 }
 
-void LensTester::draw_lens(Lens &lens) {
+void LensTester::draw_lens(const Lens &lens) {
   glColor4f(0, 1, 0, 1);
   Vector2D prev;
   bool do_prev = false;
@@ -79,7 +79,7 @@ void LensTester::draw_trace(vector<Vector3D> &trace) {
 
 
 void LensTester::render() {
-  Lens *lens = camera.get_current_lens();
+  const Lens *lens = camera.get_current_lens();
   assert(lens && "no current lens");
 
   vector<vector<Vector3D>> curr_traces;
