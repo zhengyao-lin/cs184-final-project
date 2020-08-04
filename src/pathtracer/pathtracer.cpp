@@ -313,9 +313,6 @@ void PathTracer::raytrace_pixel(size_t x, size_t y) {
       if (camera->generate_ray(ray, coeff, sample.x / sampleBuffer.w, sample.y / sampleBuffer.h)) {
         sample_radiance = est_radiance_global_illumination(ray) * coeff;
         sum += sample_radiance;
-        // printf("sampled radiance: (%lf, %lf, %lf)\n",
-        //   sample_radiance.x, sample_radiance.y, sample_radiance.z
-        // );
       } // otherwise we failed to sample the ray (because, for example, the ray got out of the compound lens)
 
       float illum = sample_radiance.illum();

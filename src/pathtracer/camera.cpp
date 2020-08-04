@@ -211,7 +211,7 @@ bool Camera::generate_ray(Ray &ray, double &coeff, double x, double y) const {
     case CameraModel::PINHOLE:
       return generate_ray_for_pinhole(ray, coeff, x, y);
     case CameraModel::THIN_LENS:
-      return generate_ray_for_pinhole(ray, coeff, x, y);
+      return generate_ray_for_thin_lens(ray, coeff, x, y);
     case CameraModel::COMPOUND_LENS:
       return generate_ray_for_compound_lens(ray, coeff, x, y);
   }

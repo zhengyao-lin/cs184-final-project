@@ -92,7 +92,7 @@ class Camera {
   bool generate_ray_for_thin_lens(Ray &ray, double &coeff, double x, double y) const;
   bool generate_ray_for_compound_lens(Ray &ray, double &coeff, double x, double y) const;
 
-  CameraModel model = CameraModel::COMPOUND_LENS;
+  CameraModel model = CameraModel::PINHOLE;
 
   // parameters for the thin lens model
   double lensRadius;
@@ -100,8 +100,7 @@ class Camera {
 
   // parameters for compound lenses
   std::vector<Lens> lenses;
-  int current_lens = 2;
-  int max_lens_sample_attempts = 20;
+  int current_lens = 0;
 
   const Lens *get_current_lens() const {
     if (current_lens < 0 || current_lens >= lenses.size()) return NULL;
@@ -117,6 +116,10 @@ class Camera {
     if (idx >= 0 && idx < lenses.size()) {
       current_lens = idx;
     }
+  }
+
+  void set_model(CameraModel model) {
+    this->model = model;
   }
 
  private:

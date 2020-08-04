@@ -549,21 +549,42 @@ void RaytracedRenderer::key_press(int key) {
     pt->camera->lensRadius = pt->camera->lensRadius + 0.05;
     fprintf(stdout, "[PathTracer] Camera lens radius increased to %f.\n", pt->camera->lensRadius);
     break;
-  // case ';':
-  //   pt->camera->focalDistance = std::max(pt->camera->focalDistance - 0.1, 0.0);
-  //   fprintf(stdout, "[PathTracer] Camera focal distance reduced to %f.\n", pt->camera->focalDistance);
-  //   break;
-  // case '\'':
-  //   pt->camera->focalDistance = pt->camera->focalDistance + 0.1;
-  //   fprintf(stdout, "[PathTracer] Camera focal distance increased to %f.\n", pt->camera->focalDistance);
-  //   break;
   case ';':
-    pt->camera->get_current_lens()->sensor_depth -= 1;
-    cout << "[PathTracer] Camera sensor depth decreased to " << pt->camera->get_current_lens()->sensor_depth << endl;
+    if (pt->camera->model == CameraModel::COMPOUND_LENS) {
+      pt->camera->get_current_lens()->sensor_depth -= 1;
+      cout << "[PathTracer] Camera sensor depth decreased to " << pt->camera->get_current_lens()->sensor_depth << endl;
+    } else {
+      pt->camera->focalDistance = std::max(pt->camera->focalDistance - 0.1, 0.0);
+      fprintf(stdout, "[PathTracer] Camera focal distance reduced to %f.\n", pt->camera->focalDistance);
+    }
     break;
   case '\'':
-    pt->camera->get_current_lens()->sensor_depth += 1;
-    cout << "[PathTracer] Camera sensor depth increased to " << pt->camera->get_current_lens()->sensor_depth << endl;
+    if (pt->camera->model == CameraModel::COMPOUND_LENS) {
+      pt->camera->get_current_lens()->sensor_depth += 1;
+      cout << "[PathTracer] Camera sensor depth increased to " << pt->camera->get_current_lens()->sensor_depth << endl;
+    } else {
+      pt->camera->focalDistance = pt->camera->focalDistance + 0.1;
+      fprintf(stdout, "[PathTracer] Camera focal distance increased to %f.\n", pt->camera->focalDistance);
+    }
+    break;
+  case 'b': case 'B':
+    pt->camera->set_model(CameraModel::PINHOLE);
+    cout << "[PathTracer] switched to pinhole model" << endl;
+    break;
+  case 'n': case 'N':
+    pt->camera->set_model(CameraModel::THIN_LENS);
+    cout << "[PathTracer] switched to thin lens model" << endl;
+    break;
+  case 'm': case 'M':
+    pt->camera->set_model(CameraModel::COMPOUND_LENS);
+    cout << "[PathTracer] switched to compound lens model" << endl;
+    break;
+  case '1':
+  case '2':
+  case '3':
+  case '4':
+    pt->camera->mount_lens(key - '1');
+    cout << "[PathTracer] set lens to " << key - '1' << endl;
     break;
   case KEYBOARD_UP:
     if (current != bvh->get_root()) {
