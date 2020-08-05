@@ -338,4 +338,10 @@ void PathTracer::raytrace_pixel(size_t x, size_t y) {
   sampleCountBuffer[x + y * sampleBuffer.w] = i;
 }
 
+/*void OfflineRenderer::autofocus(Vector2D loc) {
+    for (int x = 0; x < 100; x++) {
+        cout << "hi" << endl;
+    }
+}*/
+
 } // namespace CGL

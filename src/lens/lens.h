@@ -7,6 +7,7 @@
 #define CGL_LENS_H
 
 #include <string>
+#include <vector>
 
 #include "pathtracer/ray.h"
 
