@@ -333,15 +333,32 @@ void PathTracer::raytrace_pixel(size_t x, size_t y) {
       break;
     }
   }
-
-  sampleBuffer.update_pixel(sum * (1 / (double)i), x, y);
+  Spectrum temp = sum * (1 / (double)i);
+  sampleBuffer.update_pixel(temp, x, y);
+  temp_sample = temp;
   sampleCountBuffer[x + y * sampleBuffer.w] = i;
 }
 
-/*void OfflineRenderer::autofocus(Vector2D loc) {
-    for (int x = 0; x < 100; x++) {
-        cout << "hi" << endl;
+void PathTracer::cell_sample(Vector2D loc, vector<Spectrum> *out) {
+    size_t ns_area_light_temp = ns_area_light;
+    size_t max_ray_depth_temp = max_ray_depth;
+    size_t ns_aa_temp = ns_aa;
+    ns_aa = 1024;
+    max_ray_depth = 10;
+    ns_area_light = 4;
+    for (int x = -10; x < 11; x ++) {
+        for (int y = -10; y < 11; y++) {
+            raytrace_pixel(int(loc.x + x), int(loc.y + y));
+            out->push_back(temp_sample);
+        }
     }
-}*/
+
+
+    ns_aa = ns_aa_temp;
+    ns_area_light = ns_area_light_temp;
+    max_ray_depth = max_ray_depth_temp;
+
+}
+
 
 } // namespace CGL
