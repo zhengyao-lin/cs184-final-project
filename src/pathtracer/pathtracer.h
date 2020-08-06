@@ -42,7 +42,122 @@ namespace CGL {
          */
         void clear();
 
-        void autofocus(Vector2D loc) {}
+        void autofocus(Vector2D loc) {
+            vector<Spectrum> out = vector<Spectrum>();
+            //out.push_back(Spectrum());
+            /*for (int x = 0; x < out.size(); x ++) {
+                std::cout<<out[x]<<std::endl;
+            }*/
+            /*for (int x = -10; x < 11; x ++) {
+                for (int y = -10; y < 11; y++) {
+                    sampleBuffer.update_pixel(out[(x+10)*21 + (y + 10)], x + 100, y + 100);
+                }
+            }*/
+            double step;
+            double dir = 1.0;
+            double min;
+            double max;
+            double pos;
+            double max_var = 0;
+            double max_pos;
+            double temp_var;
+            double temp_p;
+            double temp_x;
+            if (camera->model == CameraModel::COMPOUND_LENS) {
+                min = camera->lenses[camera->current_lens].infinity_focus;
+                max = camera->lenses[camera->current_lens].near_focus;
+                step = abs((min - max) / 10.0);
+                dir = -1.0;
+                pos = min;
+            } else if (camera->model == CameraModel::THIN_LENS) {
+                min = 0;
+                max = MAXFLOAT;
+                step = 0.2;
+
+                for (int x = 1; x < 25; x += 1) {
+                    temp_p = 1.0 / (x * 0.02);
+                    camera->focalDistance = temp_p;
+                    out = vector<Spectrum>();
+                    cell_sample(loc, &out);
+                    temp_var = calc_var(&out);
+                    std::cout<<temp_var<<std::endl;
+                    if (temp_var > max_var) {
+                        max_var = temp_var;
+                        max_pos = temp_p;
+                        temp_x = x;
+                        std::cout<<"max^^"<<std::endl;
+                    }
+                }
+                std::cout<<"yoyoyo"<<std::endl;
+                for (int x = -10; x < 10; x += 1) {
+                    temp_p = 1.0 / ((temp_x + ((double) x / 10)) * 0.02);
+                    camera->focalDistance = temp_p;
+                    out = vector<Spectrum>();
+                    cell_sample(loc, &out);
+                    temp_var = calc_var(&out);
+                    std::cout<<temp_var<<std::endl;
+                    if (temp_var > max_var) {
+                        max_var = temp_var;
+                        max_pos = temp_p;
+                        //temp_x = x;
+                        std::cout<<"max^^"<<std::endl;
+                    }
+                }
+
+
+
+                pos = max_pos;
+
+            } else {
+                return;
+            }
+
+
+            int dir_change = 0;
+            double var;
+            double last_var;
+            camera->focalDistance = pos;
+            /*out = vector<Spectrum>();
+            cell_sample(loc, &out);
+            last_var = calc_var(&out);
+            //out.clear();
+            camera->focalDistance += dir * step;
+            double last_pos;
+            while (dir_change < 7) {
+                out = vector<Spectrum>();
+                cell_sample(loc, &out);
+                var = calc_var(&out);
+                std::cout<<var<<std::endl;
+                if (var < last_var) {
+                    step = step / 2.0;
+                    dir *= -1.0;
+                    dir_change += 1;
+                    //hiiii
+                }
+                last_var = var;
+                last_pos = camera->focalDistance;
+                camera->focalDistance += (dir * step);
+                if (camera->focalDistance > max || camera->focalDistance < min) {
+                    dir = (int)round(abs(last_pos - camera->focalDistance) / (last_pos - camera->focalDistance));
+                    std::cout<<dir<<std::endl;
+                    camera->focalDistance = last_pos;
+                }
+            }*/
+
+        }
+
+        double calc_var(vector<Spectrum> *out) {
+            double s1 = 0;
+            double s2 = 0;
+            double s;
+            for (int x = 0; x < (*out).size(); x ++) {
+                s = (*out)[x].r + (*out)[x].g + (*out)[x].b;
+                //std::cout<<s<<std::endl;
+                s1 += s;
+                s2 += s * s;
+            }
+            return (double)(1.0 / ((*out).size() - 1.0)) * (s2 - ((s1 * s1)/((double)(*out).size())));
+        }
 
         /**
          * Trace an ray in the scene.
@@ -56,6 +171,8 @@ namespace CGL {
         
         Spectrum at_least_one_bounce_radiance(const Ray& r, const SceneObjects::Intersection& isect);
         Spectrum at_least_one_bounce_radiance(const Ray &r, const SceneObjects::Intersection &isect, size_t current_depth);
+
+        void cell_sample(Vector2D loc, vector<Spectrum> *out);
 
         Spectrum debug_shading(const Vector3D& d) {
             return Vector3D(abs(d.r), abs(d.g), .0).unit();
@@ -93,6 +210,7 @@ namespace CGL {
         Timer timer;                   ///< performance test timer
 
         std::vector<int> sampleCountBuffer;   ///< sample count buffer
+        Spectrum temp_sample;
 
         Scene* scene;         ///< current scene
         Camera* camera;       ///< current camera
