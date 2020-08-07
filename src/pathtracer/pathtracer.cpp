@@ -122,7 +122,7 @@ inline bool importance_sample_light(
   // so that we can avoid some numerical issue
   Ray test_ray(hit_p, sampled_wi_world);
   test_ray.max_t = dist_to_light;
-  test_ray.min_t = EPS_F;
+  test_ray.min_t = EPS_D;
 
   if (bvh->has_intersection(test_ray)) return false;
 
@@ -301,8 +301,9 @@ void PathTracer::raytrace_pixel(size_t x, size_t y) {
 
   int i = 0;
   for (; i < num_samples;) {
-    int j = 0;
-    for (; j < samplesPerBatch && i + j < num_samples; j++) {
+    int actual_num_samples = 0;
+
+    for (int j = 0; j < samplesPerBatch && i + j < num_samples; j++) {
       // pdf at each point is just 1 so no need to divide
       Vector2D sample = origin + gridSampler->get_sample();
 
@@ -310,17 +311,24 @@ void PathTracer::raytrace_pixel(size_t x, size_t y) {
       Ray ray; double coeff;
       Spectrum sample_radiance;
 
-      if (camera->generate_ray(ray, coeff, sample.x / sampleBuffer.w, sample.y / sampleBuffer.h)) {
-        sample_radiance = est_radiance_global_illumination(ray) * coeff;
-        sum += sample_radiance;
-      } // otherwise we failed to sample the ray (because, for example, the ray got out of the compound lens)
+      // keep trying until a ray successfully passes through
+      // or the max nmuber of attempts is reached
+      // TODO: remove hardcoded number of attempts;
+      int attempts = 0;
+      while (!camera->generate_ray(ray, coeff, sample.x / sampleBuffer.w, sample.y / sampleBuffer.h) &&
+             ++attempts < 20);
 
+      sample_radiance = est_radiance_global_illumination(ray) * coeff;
+      sum += sample_radiance;
+      
       float illum = sample_radiance.illum();
       sum_illum += illum;
       sum_sq_illum += illum * illum;
+
+      actual_num_samples++;
     }
 
-    i += j;
+    i += actual_num_samples;
 
     // adaptive sampling
     float one_over_n = 1 / (float)i;

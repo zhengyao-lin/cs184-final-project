@@ -36,7 +36,7 @@ bool Sphere::intersect(
 
   t1 = (-b - sqrt(delta)) / (2 * a);
   t2 = (-b + sqrt(delta)) / (2 * a);
-
+  
   return true;
 }
 
