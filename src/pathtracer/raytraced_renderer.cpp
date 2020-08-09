@@ -551,7 +551,7 @@ void RaytracedRenderer::key_press(int key) {
     break;
   case ';':
     if (pt->camera->model == CameraModel::COMPOUND_LENS) {
-      pt->camera->get_current_lens()->sensor_depth -= 1;
+      pt->camera->get_current_lens()->sensor_depth -= 0.1;
       cout << "[PathTracer] Camera sensor depth decreased to " << pt->camera->get_current_lens()->sensor_depth << endl;
     } else {
       pt->camera->focalDistance = std::max(pt->camera->focalDistance - 0.1, 0.0);
@@ -560,7 +560,7 @@ void RaytracedRenderer::key_press(int key) {
     break;
   case '\'':
     if (pt->camera->model == CameraModel::COMPOUND_LENS) {
-      pt->camera->get_current_lens()->sensor_depth += 1;
+      pt->camera->get_current_lens()->sensor_depth += 0.1;
       cout << "[PathTracer] Camera sensor depth increased to " << pt->camera->get_current_lens()->sensor_depth << endl;
     } else {
       pt->camera->focalDistance = pt->camera->focalDistance + 0.1;

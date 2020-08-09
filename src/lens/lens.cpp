@@ -21,7 +21,7 @@ bool LensElement::pass_through(Ray &r, double &prev_ior) const {
     double t = (center - r.o.z) / r.d.z;
     if (t < 0) return false;
     Vector3D p_intersect = r.at_time(t);
-    if (4 * p_intersect.x * p_intersect.x + p_intersect.y * p_intersect.y > aperture * aperture) {
+    if (4 * (p_intersect.x * p_intersect.x + p_intersect.y * p_intersect.y) > aperture * aperture) {
       return false;
     }
     return true;
