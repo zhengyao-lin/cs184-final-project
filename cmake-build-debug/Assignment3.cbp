@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Assignment3"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\CGL\;CMake Files\CGL\deps\;CMake Files\CGL\deps\glew\;CMake Files\CGL\deps\glfw\;CMake Files\CGL\deps\glfw\CMake\;CMake Files\CGL\deps\glfw\src\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="install/local">
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 install/local"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="install/strip">
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 install/strip"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="install">
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 install"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="list_install_components">
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 list_install_components"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="libpathtracer">
+				<Option output="/Users/teddy/cs184-final-project/cmake-build-debug/liblibpathtracer.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/teddy/cs184-final-project/src"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glew/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glfw/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/include/CGL"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/OpenGL.framework"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 libpathtracer"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="libpathtracer/fast">
+				<Option output="/Users/teddy/cs184-final-project/cmake-build-debug/liblibpathtracer.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/teddy/cs184-final-project/src"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glew/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glfw/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/include/CGL"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/OpenGL.framework"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 libpathtracer/fast"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pathtracer">
+				<Option output="/Users/teddy/cs184-final-project/cmake-build-debug/pathtracer" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/teddy/cs184-final-project/src"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glew/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glfw/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/OpenGL.framework"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 pathtracer"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pathtracer/fast">
+				<Option output="/Users/teddy/cs184-final-project/cmake-build-debug/pathtracer" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/teddy/cs184-final-project/src"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glew/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glfw/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/OpenGL.framework"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 pathtracer/fast"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lenstester">
+				<Option output="/Users/teddy/cs184-final-project/cmake-build-debug/lenstester" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/teddy/cs184-final-project/src"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glew/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glfw/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/OpenGL.framework"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 lenstester"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lenstester/fast">
+				<Option output="/Users/teddy/cs184-final-project/cmake-build-debug/lenstester" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/teddy/cs184-final-project/src"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glew/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glfw/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/OpenGL.framework"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 lenstester/fast"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="CGL">
+				<Option output="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/libCGL.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug/CGL"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/include/CGL"/>
+					<Add directory="/usr/local/include/freetype2"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glew/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glfw/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/OpenGL.framework"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/Makefile&quot;  VERBOSE=1 CGL"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="CGL/fast">
+				<Option output="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/libCGL.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug/CGL"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/include/CGL"/>
+					<Add directory="/usr/local/include/freetype2"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glew/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glfw/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/OpenGL.framework"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/Makefile&quot;  VERBOSE=1 CGL/fast"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="glew">
+				<Option output="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glew/libglew.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glew"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glew/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glew/Makefile&quot;  VERBOSE=1 glew"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glew/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glew/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glew/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="glew/fast">
+				<Option output="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glew/libglew.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glew"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glew/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glew/Makefile&quot;  VERBOSE=1 glew/fast"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glew/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glew/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glew/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="uninstall">
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/Makefile&quot;  VERBOSE=1 uninstall"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="glfw">
+				<Option output="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src/libglfw3.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-D_GLFW_USE_CONFIG_H"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glfw/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glfw/src"/>
+					<Add directory="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src/Makefile&quot;  VERBOSE=1 glfw"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="glfw/fast">
+				<Option output="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src/libglfw3.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-D_GLFW_USE_CONFIG_H"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glfw/include"/>
+					<Add directory="/Users/teddy/cs184-final-project/CGL/deps/glfw/src"/>
+					<Add directory="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src/Makefile&quot;  VERBOSE=1 glfw/fast"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glew/src/glew.c">
+			<Option target="glew"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glew/src/glewinfo.c">
+			<Option target="glew"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glew/src/visualinfo.c">
+			<Option target="glew"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/include/GLFW/glfw3.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/include/GLFW/glfw3native.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/cocoa_init.m">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/cocoa_joystick.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/cocoa_joystick.m">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/cocoa_monitor.m">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/cocoa_platform.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/cocoa_time.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/cocoa_window.m">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/context.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/egl_context.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/egl_context.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/init.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/input.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/internal.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/mappings.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/monitor.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/nsgl_context.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/nsgl_context.m">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/osmesa_context.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/osmesa_context.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/posix_thread.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/posix_thread.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/vulkan.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/window.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/base64.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/color.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/complex.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/lodepng.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/matrix3x3.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/matrix4x4.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/osdfont.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/osdtext.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/path.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/quaternion.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/spectrum.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/tinyxml2.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/vector2D.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/vector3D.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/vector4D.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/src/viewer.cpp">
+			<Option target="CGL"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/cmake-build-debug/CGL/deps/glfw/src/glfw_config.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/application/application.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/application/application.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/application/main.cpp">
+			<Option target="pathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/application/meshEdit.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/application/meshEdit.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/application/renderer.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/lens/lens.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/lens/lens.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/lenstester/lenstester.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/lenstester/lenstester.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/lenstester/main.cpp">
+			<Option target="lenstester"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/advanced_bsdf.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/bsdf.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/bsdf.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/camera.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/camera.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/intersection.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/pathtracer.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/pathtracer.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/ray.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/raytraced_renderer.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/raytraced_renderer.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/sampler.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/pathtracer/sampler.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/aggregate.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/bbox.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/bbox.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/bvh.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/bvh.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/camera_info.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/camera_info.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/collada.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/collada.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/collada_info.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/light_info.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/light_info.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/material_info.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/material_info.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/polymesh_info.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/polymesh_info.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/sphere_info.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/collada/sphere_info.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/environment_light.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/environment_light.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/ambient_light.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/area_light.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/directional_light.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/draw_style.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/environment_light.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/material.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/mesh.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/mesh.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/mesh_view.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/point_light.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/scene.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/scene.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/sphere.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/sphere.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/gl_scene/spot_light.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/light.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/light.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/object.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/object.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/primitive.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/scene.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/sphere.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/sphere.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/triangle.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/scene/triangle.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/util/halfEdgeMesh.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/util/halfEdgeMesh.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/util/image.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/util/lodepng.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/util/lodepng.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/util/mutablePriorityQueue.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/util/random_util.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/util/sphere_drawing.cpp">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/util/sphere_drawing.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/src/util/work_queue.h">
+			<Option target="libpathtracer"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\CGL\"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/find_avx.cmake">
+			<Option virtualFolder="CMake Files\CGL\"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glew/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\CGL\deps\glew\"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\CGL\deps\glfw\"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/CMake/cmake_uninstall.cmake.in">
+			<Option virtualFolder="CMake Files\CGL\deps\glfw\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/CMake/glfw3.pc.in">
+			<Option virtualFolder="CMake Files\CGL\deps\glfw\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/CMake/glfw3Config.cmake.in">
+			<Option virtualFolder="CMake Files\CGL\deps\glfw\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\CGL\deps\glfw\src\"/>
+		</Unit>
+		<Unit filename="/Users/teddy/cs184-final-project/CGL/deps/glfw/src/glfw_config.h.in">
+			<Option virtualFolder="CMake Files\CGL\deps\glfw\src\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
