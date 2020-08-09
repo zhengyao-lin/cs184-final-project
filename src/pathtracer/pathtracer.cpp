@@ -351,9 +351,9 @@ void PathTracer::cell_sample(Vector2D loc, vector<Spectrum> *out) {
     size_t ns_area_light_temp = ns_area_light;
     size_t max_ray_depth_temp = max_ray_depth;
     size_t ns_aa_temp = ns_aa;
-    ns_aa = 1024;
+    ns_aa = 2048;
     max_ray_depth = 10;
-    ns_area_light = 4;
+    ns_area_light = 8;
     for (int x = -10; x < 11; x ++) {
         for (int y = -10; y < 11; y++) {
             raytrace_pixel(int(loc.x + x), int(loc.y + y));
