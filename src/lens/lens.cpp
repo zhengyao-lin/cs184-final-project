@@ -12,7 +12,7 @@ using namespace SceneObjects;
     
 /****** LensElement functions ******/
 
-bool LensElement::pass_through(Ray &r, double &prev_ior) const {
+bool LensElement::pass_through(Ray &r, double &prev_ior, double aperture_override) const {
   // Part 1 Task 1: Implement this. It takes r and passes it through this lens element.
   
   // only perform the aperture test
@@ -21,7 +21,8 @@ bool LensElement::pass_through(Ray &r, double &prev_ior) const {
     double t = (center - r.o.z) / r.d.z;
     if (t < 0) return false;
     Vector3D p_intersect = r.at_time(t);
-    if (4 * (p_intersect.x * p_intersect.x + p_intersect.y * p_intersect.y) > aperture * aperture) {
+    double actual_aperture = aperture_override != 0 ? aperture_override : aperture;
+    if (4 * (p_intersect.x * p_intersect.x + p_intersect.y * p_intersect.y) > actual_aperture * actual_aperture) {
       return false;
     }
     return true;
@@ -117,9 +118,9 @@ void Lens::parse_lens_file(std::string filename) {
     double offset;
     ss >> lens.radius >> offset >> lens.ior >> lens.aperture;
     lens.center = z_coord;
-    // if (!lens.radius) {
-    //   z_ap = z_coord;
-    // }
+    if (!lens.radius) {
+      z_ap = z_coord;
+    }
     z_coord += offset;
     backward_elts.push_back(lens);
   }
@@ -188,12 +189,12 @@ void Lens::set_focus_params() {
   cout << "[Lens] True focal length is " << focal_length << endl;
 }
 
-bool Lens::trace(Ray &r, std::vector<Vector3D> *trace) const {
+bool Lens::trace(Ray &r, std::vector<Vector3D> *trace, double f_stop) const {
   double current_ior = 1; // air
   r.d.normalize();
 
   for (auto &elem: elts) {
-    if (!elem.pass_through(r, current_ior)) return false;
+    if (!elem.pass_through(r, current_ior, f_stop != 0 ? f_stop * infinity_focus : 0)) return false;
     current_ior = elem.ior;
     if (trace) trace->push_back(r.o);
   }
@@ -201,13 +202,13 @@ bool Lens::trace(Ray &r, std::vector<Vector3D> *trace) const {
   return true;
 }
 
-bool Lens::trace_backwards(Ray &r, std::vector<Vector3D> *trace) const {
+bool Lens::trace_backwards(Ray &r, std::vector<Vector3D> *trace, double f_stop) const {
   double current_ior = 1; // air
   r.d.normalize();
 
   for (auto &elem: backward_elts) {
     // printf("%lf => %lf (%lf %lf)\n", current_ior, elem.ior, elem.center, elem.radius);
-    if (!elem.pass_through(r, current_ior)) return false;
+    if (!elem.pass_through(r, current_ior, f_stop != 0 ? f_stop * infinity_focus : 0)) return false;
     current_ior = elem.ior;
     if (trace) trace->push_back(r.o);
   }

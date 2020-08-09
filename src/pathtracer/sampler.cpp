@@ -1,3 +1,5 @@
+#include <random>
+
 #include "sampler.h"
 
 namespace CGL {
@@ -67,5 +69,11 @@ Vector3D CosineWeightedHemisphereSampler3D::get_sample(float *pdf) const {
   return Vector3D(r*cos(theta), r*sin(theta), sqrt(1-Xi1));
 }
 
+// TODO: may be inefficient?
+double NormalDistributionSampler1D::get_sample() const {
+  std::normal_distribution<double> sampler(mean, stddev);
+  std::mt19937 gen;
+  return sampler(gen);
+}
 
 } // namespace CGL

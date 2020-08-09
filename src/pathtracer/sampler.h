@@ -8,6 +8,12 @@
 
 namespace CGL {
 
+class Sampler1D {
+  public:
+    virtual ~Sampler1D() {}
+    virtual double get_sample() const = 0;
+};
+
 /**
  * Interface for generating 2D vector samples
  */
@@ -94,6 +100,17 @@ class CosineWeightedHemisphereSampler3D : public Sampler3D {
  * TODO (extra credit) :
  * Jittered sampler implementations
  */
+
+class NormalDistributionSampler1D : public Sampler1D {
+  double mean;
+  double stddev;
+
+public:
+  NormalDistributionSampler1D(double mean, double stddev): mean(mean), stddev(stddev) {}
+
+  // TODO: may be inefficient?
+  double get_sample() const;
+};
 
 } // namespace CGL
 

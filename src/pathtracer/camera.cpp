@@ -326,14 +326,15 @@ bool Camera::generate_ray_for_compound_lens(Ray &ray, double &coeff, double x, d
   coeff *= coeff;
 
   // trace the sensor ray through the compound lens
-  if (!lens->trace(sensor_ray, NULL)) {
+  if (!lens->trace(sensor_ray, NULL, lensRadius /* using as f-stop here */)) {
     return false;
   }
 
   Vector3D world_direction = c2w * sensor_ray.d;
   world_direction.normalize();
 
-  ray = Ray(pos + c2w * sensor_ray.o * 0.1 * lensRadius /* from mm to meters */, world_direction);
+  ray = Ray(pos + c2w * sensor_ray.o * 0.1 /* from mm to meters, but also scale up a bit to shrink the depth of field */,
+            world_direction);
   ray.min_t = nClip;
   ray.max_t = fClip;
 
