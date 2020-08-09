@@ -66,9 +66,41 @@ namespace CGL {
             if (camera->model == CameraModel::COMPOUND_LENS) {
                 min = camera->lenses[camera->current_lens].infinity_focus;
                 max = camera->lenses[camera->current_lens].near_focus;
-                step = abs((min - max) / 10.0);
+                step = abs((min - max) / 25);
                 dir = -1.0;
                 pos = min;
+                for (int x = 0; x < 26; x += 1) {
+                    pos = min + x * step;
+                    camera->focalDistance = pos;
+                    out = vector<Spectrum>();
+                    cell_sample(loc, &out);
+                    temp_var = calc_var(&out);
+                    std::cout<<temp_var<<" "<<pos<<std::endl;
+                    if (temp_var > max_var) {
+                        max_var = temp_var;
+                        max_pos = pos;
+                        //temp_x = pos;
+                        std::cout<<"max^^"<<std::endl;
+                    }
+                }
+                std::cout<<"yoyoyo"<<std::endl;
+                step = step / 5.0;
+                min = max_pos - (step * 10.0);
+                for (int x = 0; x < 21; x += 1) {
+                    pos = min + x * step;
+                    camera->focalDistance = pos;
+                    out = vector<Spectrum>();
+                    cell_sample(loc, &out);
+                    temp_var = calc_var(&out);
+                    std::cout<<temp_var<<std::endl;
+                    if (temp_var > max_var) {
+                        max_var = temp_var;
+                        max_pos = pos;
+                        //temp_x = pos;
+                        std::cout<<"max^^"<<std::endl;
+                    }
+                }
+                pos = max_pos;
             } else if (camera->model == CameraModel::THIN_LENS) {
                 min = 0;
                 max = MAXFLOAT;
