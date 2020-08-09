@@ -101,7 +101,7 @@ void Lens::parse_lens_file(std::string filename) {
   ifstream infile(filename);
   string line;
   double z_coord = 0;
-  double z_ap;
+  double z_ap = 0;
   backward_elts.clear();
   elts.clear();
   bool first = true;
@@ -117,9 +117,9 @@ void Lens::parse_lens_file(std::string filename) {
     double offset;
     ss >> lens.radius >> offset >> lens.ior >> lens.aperture;
     lens.center = z_coord;
-    if (!lens.radius) {
-      z_ap = z_coord;
-    }
+    // if (!lens.radius) {
+    //   z_ap = z_coord;
+    // }
     z_coord += offset;
     backward_elts.push_back(lens);
   }
