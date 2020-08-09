@@ -241,7 +241,7 @@ Spectrum PathTracer::at_least_one_bounce_radiance(const Ray &r,
       }
 
       L_out += bsdf * sampled_next_L
-             * (abs_cos_theta(sampled_wi_object) / pdf / CONTINUATION_PDF);
+             * (abs_cos_theta(sampled_wi_object) / pdf / (gi_enabled_and_depth_1 ? 1 : CONTINUATION_PDF));
     }
   }
 

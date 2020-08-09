@@ -333,7 +333,8 @@ bool Camera::generate_ray_for_compound_lens(Ray &ray, double &coeff, double x, d
   Vector3D world_direction = c2w * sensor_ray.d;
   world_direction.normalize();
 
-  ray = Ray(pos + c2w * sensor_ray.o * lensRadius /* from mm to meters */, world_direction);
+  ray = Ray(pos + c2w * sensor_ray.o * 0.1 * lensRadius /* from mm to meters */, world_direction);
+
   ray.min_t = nClip;
   ray.max_t = fClip;
 
