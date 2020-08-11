@@ -16,7 +16,9 @@ namespace CGL {
 // abstraction for a surface in the lens system
 struct LensElement {
 public:
-  bool pass_through(Ray &r, double &prev_ior, double aperture_override) const;
+  // returns the coefficient that should be added to the sample
+  // 0.0 if the ray does not pass through
+  double pass_through(Ray &r, double &prev_ior, bool internal_reflection, double aperture_override, bool &is_refract) const;
   bool is_stop() const { return radius == 0; }
 
   double center; // the z coordinate of the center of the circle/sphere
@@ -32,12 +34,14 @@ struct Lens {
 
   void set_focus_params();
 
-  bool trace(Ray &r, std::vector<Vector3D> *trace = NULL, double f_stop = 0.0) const;
-  bool trace_backwards(Ray &r, std::vector<Vector3D> *trace = NULL, double f_stop = 0.0) const;
+  double trace_bidirectionally(bool initial_direction, Ray &r, std::vector<Vector3D> *trace, bool internal_reflection, double f_stop) const;
+  double trace(Ray &r, std::vector<Vector3D> *trace = NULL, bool internal_reflection = false, double f_stop = 0.0) const;
+  double trace_backwards(Ray &r, std::vector<Vector3D> *trace = NULL, bool internal_reflection = false, double f_stop = 0.0) const;
 
   float focus_depth(float d) const;
 
   Vector3D back_lens_sample() const;
+  Vector3D front_lens_sample() const;
 
   mutable std::vector<LensElement> elts;
   mutable std::vector<LensElement> backward_elts;

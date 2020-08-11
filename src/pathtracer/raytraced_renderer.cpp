@@ -686,15 +686,19 @@ void RaytracedRenderer::worker_thread() {
   timer.start();
 
   WorkItem work;
-  while (continueRaytracing && workQueue.try_get_work(&work)) {
-    raytrace_tile(work.tile_x, work.tile_y, work.tile_w, work.tile_h);
-    { 
-      lock_guard<std::mutex> lk(m_done);
-      ++tilesDone;
-      cout << "\r[PathTracer] Rendering... " << int((double)tilesDone/tilesTotal * 100) << '%';
-      cout.flush();
-    }
-  }
+
+  pt->lens_flare();
+  pt->write_to_framebuffer(frameBuffer, 0, 0, frame_w, frame_h);
+
+  // while (continueRaytracing && workQueue.try_get_work(&work)) {
+  //   raytrace_tile(work.tile_x, work.tile_y, work.tile_w, work.tile_h);
+  //   { 
+  //     lock_guard<std::mutex> lk(m_done);
+  //     ++tilesDone;
+  //     cout << "\r[PathTracer] Rendering... " << int((double)tilesDone/tilesTotal * 100) << '%';
+  //     cout.flush();
+  //   }
+  // }
 
   workerDoneCount++;
   if (!continueRaytracing && workerDoneCount == numWorkerThreads) {

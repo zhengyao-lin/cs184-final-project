@@ -12,9 +12,38 @@ using namespace SceneObjects;
     
 /****** LensElement functions ******/
 
-bool LensElement::pass_through(Ray &r, double &prev_ior, double aperture_override) const {
+// refract using the Snell's law
+// assuming incoming and normal are unit vectors
+// and assume that dot(incoming, normal) < 0
+inline static bool refract(const Vector3D &incoming, const Vector3D &normal, double prev_ior, double ior, Vector3D &outgoing) {
+  // regularize normal to point in the opposite direction of the incoming ray
+  double cos_theta_i = fabs(dot(incoming, normal));
+
+  // https://cs184.eecs.berkeley.edu/sp18/lecture/materials/slide_018
+  double k = prev_ior / ior;
+  double sin_theta_o_2 = k * k * (1 - cos_theta_i * cos_theta_i);
+
+  // total internal reflection
+  if (sin_theta_o_2 > 1) {
+    return false;
+  }
+
+  // https://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf
+  outgoing = k * incoming + (k * cos_theta_i - sqrt(1 - sin_theta_o_2)) * normal;
+  outgoing.normalize();
+
+  return true;
+}
+
+inline static void reflect(const Vector3D &incoming, const Vector3D &normal, Vector3D &outgoing) {
+  outgoing = incoming - 2 * dot(incoming, normal) * normal;
+}
+
+double LensElement::pass_through(Ray &r, double &prev_ior, bool internal_reflection, double aperture_override, bool &is_refract) const {
   // Part 1 Task 1: Implement this. It takes r and passes it through this lens element.
   
+  is_refract = true;
+
   // only perform the aperture test
   // if the element is a stop
   if (is_stop()) {
@@ -23,9 +52,9 @@ bool LensElement::pass_through(Ray &r, double &prev_ior, double aperture_overrid
     Vector3D p_intersect = r.at_time(t);
     double actual_aperture = aperture_override != 0 ? aperture_override : aperture;
     if (4 * (p_intersect.x * p_intersect.x + p_intersect.y * p_intersect.y) > actual_aperture * actual_aperture) {
-      return false;
+      return 0.0;
     }
-    return true;
+    return 1.0;
   }
 
   // intersect with the surface (sphere) defined by (center, radius)
@@ -61,7 +90,6 @@ bool LensElement::pass_through(Ray &r, double &prev_ior, double aperture_overrid
     return false;
   }
 
-  // refract using the Snell's law
   Vector3D normal = p_intersect - p_center;
   normal.normalize();
 
@@ -70,29 +98,53 @@ bool LensElement::pass_through(Ray &r, double &prev_ior, double aperture_overrid
     normal = -normal;
   }
 
-  // assuming r.d is normalized
-  double cos_theta_i = fabs(dot(r.d, normal));
-
-  // https://cs184.eecs.berkeley.edu/sp18/lecture/materials/slide_018
-  double k = prev_ior / ior;
-  double sin_theta_o_2 = k * k * (1 - cos_theta_i * cos_theta_i);
-
-  // total internal reflection
-  if (sin_theta_o_2 > 1) {
-    return false;
-  }
-
-  Vector3D old_direction = r.d;
-
-  // https://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf
-  r.d = k * r.d + (k * cos_theta_i - sqrt(1 - sin_theta_o_2)) * normal;
-  r.d.normalize();
-  
   r.o = p_intersect;
 
-  // printf("refract from (%lf, %lf, %lf) to (%lf, %lf, %lf)\n", old_direction.x, old_direction.y, old_direction.z, r.d.x, r.d.y, r.d.z);
+  if (internal_reflection) {
+    // reflection enabled, there are three possibilities:
+    // - total internal reflection
+    // - refraction
+    // - reflection (weighted by the Schlick's reflection coefficient)
+    Vector3D outgoing;
 
-  return true;
+    if (!refract(r.d, normal, prev_ior, ior, outgoing)) {
+      // printf("total internal reflection!\n");
+      // total internal reflection
+      reflect(r.d, normal, outgoing);
+      r.d = outgoing;
+      is_refract = false;
+      return 1.0 / fabs(dot(outgoing, normal));
+    } else {
+      // Schlick's approximation
+      // https://en.wikipedia.org/wiki/Schlick's_approximation
+      float r0 = (prev_ior - ior) / (prev_ior + ior);
+      float r1 = r0 * r0;
+      float r2 = 1 - fabs(dot(r.d, normal));
+      float r3 = r2 * r2;
+      float R = r1 + (1 - r1) * r3 * r3 * r2;
+
+      // if (coin_flip_with_seed(R, r.d.x * 100 + r.d.y * 10000 + r.d.z * 1000000)) {
+      if (coin_flip(R)) {
+        // printf("not total reflection! %lf\n", R);
+        // reflection
+        reflect(r.d, normal, outgoing);
+        r.d = outgoing;
+        is_refract = false;
+        return R / fabs(dot(outgoing, normal));
+        // return 1.0;
+      } else {
+        // refraction
+        r.d = outgoing;
+        return (1 - R) / fabs(dot(outgoing, normal));
+        // return 1.0;
+      }
+    }
+  } else {
+    Vector3D outgoing;
+    if (!refract(r.d, normal, prev_ior, ior, outgoing)) return 0.0;
+    r.d = outgoing;
+    return 1.0;
+  }
 }
 
 /****** Lens functions ******/
@@ -160,7 +212,8 @@ void Lens::set_focus_params() {
 
   // estimate the infinity focus
   Ray r0(Vector3D(0, height, -1000000), Vector3D(0, 0, 1));
-  assert(trace_backwards(r0, NULL) && "failed to estimate the infinity focus");
+  double p = trace_backwards(r0, NULL, false);
+  assert(p != 0.0 && "failed to estimate the infinity focus");
   assert(r0.d.x > -EPS_D && r0.d.x < EPS_D && "the ray should not deviate from the y-z plane");
   double t0 = (0 - r0.o.y) / r0.d.y;
   assert(t0 > 0 && "the ray should not diverge");
@@ -177,8 +230,8 @@ void Lens::set_focus_params() {
   Vector3D d1 = Vector3D(0, height, 0) - o1;
   d1.normalize();
   Ray r1(o1, d1);
-
-  assert(trace_backwards(r1, NULL) && "failed to estimate the near focus");
+  p = trace_backwards(r1, NULL, false);
+  assert(p != 0 && "failed to estimate the near focus");
   assert(r1.d.x > -EPS_D && r1.d.x < EPS_D && "the ray should not deviate from the y-z plane");
   double t1 = (0 - r1.o.y) / r1.d.y;
   assert(t1 > 0 && "the ray should not diverge");
@@ -189,31 +242,84 @@ void Lens::set_focus_params() {
   cout << "[Lens] True focal length is " << focal_length << endl;
 }
 
-bool Lens::trace(Ray &r, std::vector<Vector3D> *trace, double f_stop) const {
+double Lens::trace_bidirectionally(bool initial_direction /* true for forward */,
+                                   Ray &r, std::vector<Vector3D> *trace, bool internal_reflection, double f_stop) const {
+  const int MAX_REFLECT_BOUNCE = 2;
+
   double current_ior = 1; // air
   r.d.normalize();
 
-  for (auto &elem: elts) {
-    if (!elem.pass_through(r, current_ior, f_stop != 0 ? f_stop * infinity_focus : 0)) return false;
-    current_ior = elem.ior;
+  double p = 1;
+
+  double aperture_override = f_stop != 0 ? f_stop * infinity_focus : 0;
+
+  bool is_forward = initial_direction;
+  // index in the forward list (complement to get the same surface in the backward list)
+  int forward_idx = initial_direction ? 0 : elts.size() - 1;
+
+  int bounces = 0;
+
+  assert(backward_elts.size() == elts.size());
+
+  while (bounces < elts.size() + MAX_REFLECT_BOUNCE && forward_idx >= 0 && forward_idx < elts.size()) {
+    bool is_refract;
+
+    if (is_forward) {
+      // trace forward
+      double coeff = elts[forward_idx].pass_through(r, current_ior, internal_reflection, aperture_override, is_refract);
+      if (coeff == 0.0) return 0.0;
+      p *= coeff;
+
+      if (is_refract) {
+        // keep going in the same direction
+        current_ior = elts[forward_idx].ior;
+        forward_idx++;
+      } else {
+        // reverse course
+        is_forward = false;
+        forward_idx--;
+        // no change in current_ior
+      }
+    } else {
+      double coeff = backward_elts[elts.size() - forward_idx - 1].pass_through(r, current_ior, internal_reflection, aperture_override, is_refract);
+      // printf("backward tracing %lf %lf %d %d %ld\n", p, coeff, forward_idx, bounces, elts.size() + MAX_REFLECT_BOUNCE);
+      if (coeff == 0.0) return 0.0;
+      p *= coeff;
+
+      if (is_refract) {
+        // keep going in the same direction
+        current_ior = backward_elts[elts.size() - forward_idx - 1].ior;
+        forward_idx--; // reduce forward_idx instead of increasing
+      } else {
+        // reverse course
+        is_forward = true;
+        forward_idx++;
+        // no change in current_ior
+      }
+    }
+
     if (trace) trace->push_back(r.o);
+
+    bounces++;
   }
 
-  return true;
+  // successfullly traces through the original direction
+  if ((initial_direction && forward_idx == elts.size()) ||
+      (!initial_direction && forward_idx == -1)) {
+    return p;
+  }
+
+  // failed to trace through the original direction or
+  // the number of bounces exceeded
+  return 0.0;
 }
 
-bool Lens::trace_backwards(Ray &r, std::vector<Vector3D> *trace, double f_stop) const {
-  double current_ior = 1; // air
-  r.d.normalize();
+double Lens::trace(Ray &r, std::vector<Vector3D> *trace, bool internal_reflection, double f_stop) const {
+  return trace_bidirectionally(true, r, trace, internal_reflection, f_stop);
+}
 
-  for (auto &elem: backward_elts) {
-    // printf("%lf => %lf (%lf %lf)\n", current_ior, elem.ior, elem.center, elem.radius);
-    if (!elem.pass_through(r, current_ior, f_stop != 0 ? f_stop * infinity_focus : 0)) return false;
-    current_ior = elem.ior;
-    if (trace) trace->push_back(r.o);
-  }
-
-  return true;
+double Lens::trace_backwards(Ray &r, std::vector<Vector3D> *trace, bool internal_reflection, double f_stop) const {
+  return trace_bidirectionally(false, r, trace, internal_reflection, f_stop);
 }
 
 float Lens::focus_depth(float d) const {
@@ -230,6 +336,21 @@ Vector3D Lens::back_lens_sample() const {
   // on the back element of the lens (the element closest to the sensor)
 
   LensElement &closest = elts[0];
+
+  UniformGridSampler2D sampler;
+  Vector2D sample = sampler.get_sample();
+  double r = sample.x;
+  double theta = sample.y * 2.0 * PI;
+
+  return Vector3D(
+    r * closest.radius * cos(theta),
+    r * closest.radius * sin(theta),
+    closest.center - closest.radius
+  );
+}
+
+Vector3D Lens::front_lens_sample() const {
+  LensElement &closest = backward_elts[0];
 
   UniformGridSampler2D sampler;
   Vector2D sample = sampler.get_sample();

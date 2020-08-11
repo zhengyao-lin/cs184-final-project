@@ -59,6 +59,12 @@ inline bool coin_flip(double p) {
   return random_uniform() < p;
 }
 
+inline bool coin_flip_with_seed(double p, uint32_t seed) {
+  struct xorshift32_state state;
+  state.a = seed;
+  return (double)xorshift32(state) * inv_uint32_max < p;
+}
+
 } // namespace CGL
 
 #endif  // CGL_RANDOMUTIL_H

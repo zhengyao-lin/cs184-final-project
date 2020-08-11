@@ -219,6 +219,8 @@ namespace CGL {
          */
         void raytrace_pixel(size_t x, size_t y);
 
+        void lens_flare();
+
         // Integrator sampling settings //
 
         size_t max_ray_depth; ///< maximum allowed ray depth (applies to all rays)

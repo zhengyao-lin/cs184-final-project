@@ -103,7 +103,7 @@ void LensTester::render() {
       if (backwards) 
         lens->trace_backwards(r,&trace);
       else
-        lens->trace(r,&trace);
+        lens->trace(r,&trace,true);
       trace.push_back(r.o + 2000*r.d);
 
       curr_traces.push_back(trace);

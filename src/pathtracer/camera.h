@@ -122,7 +122,11 @@ class Camera {
     this->model = model;
   }
 
- private:
+  const Matrix3x3 &get_c2w() {
+    return c2w;
+  }
+
+ public:
   // Computes pos, screenXDir, screenYDir from target, r, phi, theta.
   void compute_position();
 

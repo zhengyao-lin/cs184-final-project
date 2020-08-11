@@ -341,10 +341,75 @@ void PathTracer::raytrace_pixel(size_t x, size_t y) {
       break;
     }
   }
+  
   Spectrum temp = sum * (1 / (double)i);
   sampleBuffer.update_pixel(temp, x, y);
   temp_sample = temp;
   sampleCountBuffer[x + y * sampleBuffer.w] = i;
+}
+
+void PathTracer::lens_flare() {
+  const int SAMPLES = 10000000;
+
+  // importance sample lens flare
+  for (SceneLight *light: scene->lights) {
+    for (int i = 0; i < SAMPLES; i++) {
+      Lens *lens = camera->get_current_lens();
+
+      // sample front lens
+      Vector3D front_lens_sample_camera_space = lens->front_lens_sample();
+      Vector3D front_lens_sample = camera->position() + camera->get_c2w() * front_lens_sample_camera_space * 0.001;
+
+      Matrix3x3 w2c = camera->get_c2w().inv();
+
+      // sample light
+      Vector3D wi;
+      float dist, pdf;
+      Spectrum light_sample = light->sample_L(front_lens_sample, &wi, &dist, &pdf);
+
+      Vector3D light_sample_pos = front_lens_sample + wi;
+
+      Vector3D light_sample_pos_camera_space = w2c * (light_sample_pos - camera->position()) / 0.001;
+      Vector3D direction_camera_space = w2c * -wi;
+      direction_camera_space.normalize();
+
+      // try to hint the point and pray :)
+      Ray ray(light_sample_pos_camera_space, direction_camera_space);
+
+      double p = lens->trace_backwards(ray, NULL, true);
+      if (p == 0.0) continue;
+    
+      // determine where it hits on the sensor plane (at sensor_depth)
+      double t = (lens->sensor_depth - ray.o.z) / ray.d.z;
+      Vector3D sensor_plane_pos = ray.at_time(t);
+
+      if (t < 0) continue;
+    
+      double h_fov_radian = camera->hFov * PI / 180;
+      double v_fov_radian = camera->vFov * PI / 180;
+
+      double w_half = tan(h_fov_radian / 2) * lens->sensor_depth;
+      double h_half = tan(v_fov_radian / 2) * lens->sensor_depth;
+
+      // printf("hit sensor (%lf, %lf)\n", sensor_plane_pos.x, sensor_plane_pos.y);
+
+      if (sensor_plane_pos.x >= -w_half && sensor_plane_pos.x <= w_half &&
+          sensor_plane_pos.y >= -h_half && sensor_plane_pos.y <= h_half) {
+        double x_f = 1 - (sensor_plane_pos.x + w_half) / (2 * w_half);
+        double y_f = 1 - (sensor_plane_pos.y + h_half) / (2 * h_half);
+
+        x_f *= sampleBuffer.w;
+        y_f *= sampleBuffer.h;
+
+        size_t x = x_f, y = y_f;
+
+        // printf("hit sensor (%lf, %lf) %lf\n", x_f, y_f, p);
+        // sampleBuffer.update_pixel(Spectrum(1, 0, 1), x, y);
+        size_t n_pixels = sampleBuffer.w * sampleBuffer.h;
+        sampleBuffer.data[x + y * sampleBuffer.w] += Spectrum((double)n_pixels / SAMPLES, (double)n_pixels / SAMPLES, 0);
+      }
+    }
+  }
 }
 
 void PathTracer::cell_sample(Vector2D loc, vector<Spectrum> *out) {
