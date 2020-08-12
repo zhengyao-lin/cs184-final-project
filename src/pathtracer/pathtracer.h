@@ -65,13 +65,13 @@ namespace CGL {
             double temp_x;
             if (camera->model == CameraModel::COMPOUND_LENS) {
                 min = camera->lenses[camera->current_lens].infinity_focus;
-                max = camera->lenses[camera->current_lens].near_focus;
+                max = camera->lenses[camera->current_lens].near_focus*2.0;
                 step = abs((min - max) / 25);
                 dir = -1.0;
                 pos = min;
                 for (int x = 0; x < 26; x += 1) {
                     pos = min + x * step;
-                    camera->focalDistance = pos;
+                    camera->lenses[camera->current_lens].sensor_depth = pos;
                     out = vector<Spectrum>();
                     cell_sample(loc, &out);
                     temp_var = calc_var(&out);
@@ -88,7 +88,7 @@ namespace CGL {
                 min = max_pos - (step * 10.0);
                 for (int x = 0; x < 21; x += 1) {
                     pos = min + x * step;
-                    camera->focalDistance = pos;
+                    camera->lenses[camera->current_lens].sensor_depth = pos;
                     out = vector<Spectrum>();
                     cell_sample(loc, &out);
                     temp_var = calc_var(&out);
@@ -100,7 +100,7 @@ namespace CGL {
                         std::cout<<"max^^"<<std::endl;
                     }
                 }
-                pos = max_pos;
+                camera->lenses[camera->current_lens].sensor_depth = max_pos;
             } else if (camera->model == CameraModel::THIN_LENS) {
                 min = 0;
                 max = MAXFLOAT;
@@ -139,6 +139,7 @@ namespace CGL {
 
 
                 pos = max_pos;
+                camera->focalDistance = pos;
 
             } else {
                 return;
@@ -148,7 +149,7 @@ namespace CGL {
             int dir_change = 0;
             double var;
             double last_var;
-            camera->focalDistance = pos;
+            //camera->focalDistance = pos;
             /*out = vector<Spectrum>();
             cell_sample(loc, &out);
             last_var = calc_var(&out);
