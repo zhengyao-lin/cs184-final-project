@@ -348,13 +348,20 @@ void PathTracer::raytrace_pixel(size_t x, size_t y) {
   sampleCountBuffer[x + y * sampleBuffer.w] = i;
 }
 
-void PathTracer::lens_flare() {
-  const int SAMPLES = 10000000;
+void PathTracer::lens_flare(ImageBuffer &framebuffer, size_t frame_w, size_t frame_h) {
+  const int SAMPLES = 1000000000;
+
+  double avg_samples = sampleBuffer.w * sampleBuffer.h / (double)SAMPLES;
 
   // importance sample lens flare
   for (SceneLight *light: scene->lights) {
     for (int i = 0; i < SAMPLES; i++) {
       Lens *lens = camera->get_current_lens();
+
+      if (i % (SAMPLES / 1000) == 0) {
+        fprintf(stderr, "\r[PathTracer] Rendering... (%.0f%%)", (double)(i + 1) / SAMPLES * 100);
+        write_to_framebuffer(framebuffer, 0, 0, frame_w, frame_h);
+      }
 
       // sample front lens
       Vector3D front_lens_sample_camera_space = lens->front_lens_sample();
@@ -365,7 +372,7 @@ void PathTracer::lens_flare() {
       // sample light
       Vector3D wi;
       float dist, pdf;
-      Spectrum light_sample = light->sample_L(front_lens_sample, &wi, &dist, &pdf);
+      Spectrum light_sample_spectrum = light->sample_L(front_lens_sample, &wi, &dist, &pdf);
 
       Vector3D light_sample_pos = front_lens_sample + wi;
 
@@ -405,8 +412,11 @@ void PathTracer::lens_flare() {
 
         // printf("hit sensor (%lf, %lf) %lf\n", x_f, y_f, p);
         // sampleBuffer.update_pixel(Spectrum(1, 0, 1), x, y);
-        size_t n_pixels = sampleBuffer.w * sampleBuffer.h;
-        sampleBuffer.data[x + y * sampleBuffer.w] += Spectrum((double)n_pixels / SAMPLES, (double)n_pixels / SAMPLES, 0);
+        // Spectrum old_sample = sampleBuffer.data[x + y * sampleBuffer.w];
+        // int old_count = sampleCountBuffer[x + y * sampleBuffer.w];
+
+        sampleBuffer.data[x + y * sampleBuffer.w] += 100000 * Spectrum(1, 1, 1) * p * avg_samples;
+        // sampleCountBuffer[x + y * sampleBuffer.w] = old_count + 1;
       }
     }
   }

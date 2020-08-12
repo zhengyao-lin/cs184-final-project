@@ -219,7 +219,7 @@ namespace CGL {
          */
         void raytrace_pixel(size_t x, size_t y);
 
-        void lens_flare();
+        void lens_flare(ImageBuffer &framebuffer, size_t frame_w, size_t frame_h);
 
         // Integrator sampling settings //
 

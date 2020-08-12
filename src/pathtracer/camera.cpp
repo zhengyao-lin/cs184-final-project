@@ -117,7 +117,7 @@ void Camera::move_by(const double dx, const double dy, const double d) {
  * Move the specified amount along the view axis.
  */
 void Camera::move_forward(const double dist) {
-  double newR = min(max(r - dist, minR), maxR);
+  double newR = max(r - dist, minR), maxR;
   pos = targetPos + ((pos - targetPos) * (newR / r));
   r = newR;
 }

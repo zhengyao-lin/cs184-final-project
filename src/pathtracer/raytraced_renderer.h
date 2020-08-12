@@ -74,7 +74,8 @@ public:
              bool direct_hemisphere_sample = false,
              string filename = "",
              double lensRadius = 0.25,
-             double focalDistance = 4.7);
+             double focalDistance = 4.7,
+             int lens_flare_max_reflection = 100);
 
   /**
    * Destructor.
@@ -239,6 +240,8 @@ public:
   std::mutex m_done;
   size_t tilesDone;
   size_t tilesTotal;
+
+  int lens_flare_max_reflection;
 
   // Visualizer Controls //
 

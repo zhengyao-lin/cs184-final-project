@@ -51,7 +51,9 @@ double LensElement::pass_through(Ray &r, double &prev_ior, bool internal_reflect
     if (t < 0) return false;
     Vector3D p_intersect = r.at_time(t);
     double actual_aperture = aperture_override != 0 ? aperture_override : aperture;
-    if (4 * (p_intersect.x * p_intersect.x + p_intersect.y * p_intersect.y) > actual_aperture * actual_aperture) {
+
+    // p_intersect.x * p_intersect.x + p_intersect.y * p_intersect.y
+    if (p_intersect.x * p_intersect.x + p_intersect.y * p_intersect.y > actual_aperture * actual_aperture * 0.25) {
       return 0.0;
     }
     return 1.0;
@@ -244,8 +246,6 @@ void Lens::set_focus_params() {
 
 double Lens::trace_bidirectionally(bool initial_direction /* true for forward */,
                                    Ray &r, std::vector<Vector3D> *trace, bool internal_reflection, double f_stop) const {
-  const int MAX_REFLECT_BOUNCE = 2;
-
   double current_ior = 1; // air
   r.d.normalize();
 
@@ -261,7 +261,7 @@ double Lens::trace_bidirectionally(bool initial_direction /* true for forward */
 
   assert(backward_elts.size() == elts.size());
 
-  while (bounces < elts.size() + MAX_REFLECT_BOUNCE && forward_idx >= 0 && forward_idx < elts.size()) {
+  while (bounces < elts.size() + max_reflect_bounce && forward_idx >= 0 && forward_idx < elts.size()) {
     bool is_refract;
 
     if (is_forward) {
@@ -282,7 +282,7 @@ double Lens::trace_bidirectionally(bool initial_direction /* true for forward */
       }
     } else {
       double coeff = backward_elts[elts.size() - forward_idx - 1].pass_through(r, current_ior, internal_reflection, aperture_override, is_refract);
-      // printf("backward tracing %lf %lf %d %d %ld\n", p, coeff, forward_idx, bounces, elts.size() + MAX_REFLECT_BOUNCE);
+      // printf("backward tracing %lf %lf %d %d %ld\n", p, coeff, forward_idx, bounces, elts.size() + max_reflect_bounce);
       if (coeff == 0.0) return 0.0;
       p *= coeff;
 

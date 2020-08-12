@@ -50,6 +50,8 @@ struct Lens {
   double ap_radius, ap_original;
   size_t ap_i;
   double sensor_depth;
+
+  int max_reflect_bounce = 100;
 };
 }
 

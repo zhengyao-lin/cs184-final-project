@@ -47,7 +47,8 @@ RaytracedRenderer::RaytracedRenderer(size_t ns_aa,
                        bool direct_hemisphere_sample,
                        string filename,
                        double lensRadius,
-                       double focalDistance) {
+                       double focalDistance,
+                       int lens_flare_max_reflection) {
   state = INIT;
 
   pt = new PathTracer();
@@ -82,6 +83,8 @@ RaytracedRenderer::RaytracedRenderer(size_t ns_aa,
   imageTileSize = 32;                     // Size of the rendering tile.
   numWorkerThreads = num_threads;         // Number of threads
   workerThreads.resize(numWorkerThreads);
+
+  this->lens_flare_max_reflection = lens_flare_max_reflection;
 }
 
 /**
@@ -141,6 +144,8 @@ void RaytracedRenderer::set_camera(Camera *camera) {
   camera->focalDistance = focalDistance;
   camera->lensRadius = lensRadius;
   this->camera = camera;
+
+  camera->get_current_lens()->max_reflect_bounce = lens_flare_max_reflection;
 
   if (has_valid_configuration()) {
     state = READY;
@@ -687,7 +692,7 @@ void RaytracedRenderer::worker_thread() {
 
   WorkItem work;
 
-  pt->lens_flare();
+  pt->lens_flare(frameBuffer, frame_w, frame_h);
   pt->write_to_framebuffer(frameBuffer, 0, 0, frame_w, frame_h);
 
   // while (continueRaytracing && workQueue.try_get_work(&work)) {

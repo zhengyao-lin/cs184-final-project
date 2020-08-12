@@ -34,7 +34,8 @@ Application::Application(AppConfig config, bool gl) {
     config.pathtracer_direct_hemisphere_sample,
     config.pathtracer_filename,
     config.pathtracer_lensRadius,
-    config.pathtracer_focalDistance
+    config.pathtracer_focalDistance,
+    config.lens_flare_max_reflection
   );
   filename = config.pathtracer_filename;
 }
@@ -347,7 +348,7 @@ GLScene::SceneObject *Application::init_polymesh(
 }
 
 void Application::set_scroll_rate() {
-  scroll_rate = canonical_view_distance / 10;
+  scroll_rate = canonical_view_distance;
 }
 
 void Application::init_material(MaterialInfo& material) {
@@ -606,8 +607,8 @@ void Application::mouse1_dragged(float x, float y) {
 */
 void Application::mouse2_dragged(float x, float y) {
   if (mode == RENDER_MODE) return;
-  float dx = (x - mouseX);
-  float dy = (y - mouseY);
+  float dx = (x - mouseX) * 10;
+  float dy = (y - mouseY) * 10;
 
   // don't negate y because up is down.
   camera.move_by(-dx, dy, canonical_view_distance);
