@@ -348,26 +348,35 @@ void PathTracer::raytrace_pixel(size_t x, size_t y) {
   sampleCountBuffer[x + y * sampleBuffer.w] = i;
 }
 
-void PathTracer::lens_flare(ImageBuffer &framebuffer, size_t frame_w, size_t frame_h) {
-  const int SAMPLES = 1000000000;
+void PathTracer::lens_flare(size_t n_samples, ImageBuffer &framebuffer, size_t frame_w, size_t frame_h) {
+  double avg_samples = (double)n_samples / (sampleBuffer.w * sampleBuffer.h);
 
-  double avg_samples = sampleBuffer.w * sampleBuffer.h / (double)SAMPLES;
+  Matrix3x3 c2w = camera->get_c2w();
+  Matrix3x3 w2c = c2w.inv();
+
+  Vector3D camera_pos = camera->position();
+
+  Lens *lens = camera->get_current_lens();
+
+  double h_fov_radian = camera->hFov * PI / 180;
+  double v_fov_radian = camera->vFov * PI / 180;
+
+  double w_half = tan(h_fov_radian / 2) * lens->sensor_depth;
+  double h_half = tan(v_fov_radian / 2) * lens->sensor_depth;
 
   // importance sample lens flare
   for (SceneLight *light: scene->lights) {
-    for (int i = 0; i < SAMPLES; i++) {
-      Lens *lens = camera->get_current_lens();
-
-      if (i % (SAMPLES / 1000) == 0) {
-        fprintf(stderr, "\r[PathTracer] Rendering... (%.0f%%)", (double)(i + 1) / SAMPLES * 100);
+    for (int i = 0; i < n_samples; i++) {
+      if (i % (n_samples / 1000) == 0) {
+        fprintf(stderr, "\r[PathTracer] Rendering... (%.0f%%)", (double)(i + 1) / n_samples * 100);
         write_to_framebuffer(framebuffer, 0, 0, frame_w, frame_h);
       }
 
       // sample front lens
-      Vector3D front_lens_sample_camera_space = lens->front_lens_sample();
-      Vector3D front_lens_sample = camera->position() + camera->get_c2w() * front_lens_sample_camera_space * 0.001;
-
-      Matrix3x3 w2c = camera->get_c2w().inv();
+      double front_lens_area;
+      Vector3D front_lens_sample_camera_space = lens->front_lens_sample(front_lens_area);
+      Vector3D front_lens_sample = camera_pos + c2w * front_lens_sample_camera_space * 0.001;
+      front_lens_area *= 0.001 * 0.001;
 
       // sample light
       Vector3D wi;
@@ -376,7 +385,7 @@ void PathTracer::lens_flare(ImageBuffer &framebuffer, size_t frame_w, size_t fra
 
       Vector3D light_sample_pos = front_lens_sample + wi;
 
-      Vector3D light_sample_pos_camera_space = w2c * (light_sample_pos - camera->position()) / 0.001;
+      Vector3D light_sample_pos_camera_space = w2c * (light_sample_pos - camera_pos) / 0.001;
       Vector3D direction_camera_space = w2c * -wi;
       direction_camera_space.normalize();
 
@@ -391,12 +400,6 @@ void PathTracer::lens_flare(ImageBuffer &framebuffer, size_t frame_w, size_t fra
       Vector3D sensor_plane_pos = ray.at_time(t);
 
       if (t < 0) continue;
-    
-      double h_fov_radian = camera->hFov * PI / 180;
-      double v_fov_radian = camera->vFov * PI / 180;
-
-      double w_half = tan(h_fov_radian / 2) * lens->sensor_depth;
-      double h_half = tan(v_fov_radian / 2) * lens->sensor_depth;
 
       // printf("hit sensor (%lf, %lf)\n", sensor_plane_pos.x, sensor_plane_pos.y);
 
@@ -415,7 +418,7 @@ void PathTracer::lens_flare(ImageBuffer &framebuffer, size_t frame_w, size_t fra
         // Spectrum old_sample = sampleBuffer.data[x + y * sampleBuffer.w];
         // int old_count = sampleCountBuffer[x + y * sampleBuffer.w];
 
-        sampleBuffer.data[x + y * sampleBuffer.w] += 100000 * Spectrum(1, 1, 1) * p * avg_samples;
+        sampleBuffer.data[x + y * sampleBuffer.w] += 500000000 * Spectrum(1, 1, 1) * p / pdf * front_lens_area / avg_samples;
         // sampleCountBuffer[x + y * sampleBuffer.w] = old_count + 1;
       }
     }

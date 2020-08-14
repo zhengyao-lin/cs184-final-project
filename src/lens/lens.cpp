@@ -52,10 +52,25 @@ double LensElement::pass_through(Ray &r, double &prev_ior, bool internal_reflect
     Vector3D p_intersect = r.at_time(t);
     double actual_aperture = aperture_override != 0 ? aperture_override : aperture;
 
-    // p_intersect.x * p_intersect.x + p_intersect.y * p_intersect.y
     if (p_intersect.x * p_intersect.x + p_intersect.y * p_intersect.y > actual_aperture * actual_aperture * 0.25) {
       return 0.0;
     }
+
+#define T(j, n) (p_intersect.x * cos(2 * PI * (j) / (n)) + p_intersect.y * sin(2 * PI * (j) / (n)))
+
+    // max_j [x cos(2 pi j/n) + y sin(2 pi j/n)]
+    // max()
+
+    // pentagon
+    // if (max({ T(1.0, 5.0), T(2.0, 5.0), T(3.0, 5.0), T(4.0, 5.0), T(5.0, 5.0) }) > actual_aperture * 0.5) {
+    //   return 0.0;
+    // }
+
+    // hexagon
+    // if (max({ T(1.0, 6.0), T(2.0, 6.0), T(3.0, 6.0), T(4.0, 6.0), T(5.0, 6.0), T(6.0, 6.0) }) > actual_aperture * 0.5) {
+    //   return 0.0;
+    // }
+
     return 1.0;
   }
 
@@ -125,8 +140,8 @@ double LensElement::pass_through(Ray &r, double &prev_ior, bool internal_reflect
       float r3 = r2 * r2;
       float R = r1 + (1 - r1) * r3 * r3 * r2;
 
-      // if (coin_flip_with_seed(R, r.d.x * 100 + r.d.y * 10000 + r.d.z * 1000000)) {
-      if (coin_flip(R)) {
+      if (coin_flip_with_seed(R, r.d.x * 100 + r.d.y * 10000 + r.d.z * 1000000)) {
+      // if (coin_flip(R)) {
         // printf("not total reflection! %lf\n", R);
         // reflection
         reflect(r.d, normal, outgoing);
@@ -349,17 +364,21 @@ Vector3D Lens::back_lens_sample() const {
   );
 }
 
-Vector3D Lens::front_lens_sample() const {
+Vector3D Lens::front_lens_sample(double &area) const {
   LensElement &closest = backward_elts[0];
+
+  double lens_radius = closest.aperture / 2;
 
   UniformGridSampler2D sampler;
   Vector2D sample = sampler.get_sample();
   double r = sample.x;
   double theta = sample.y * 2.0 * PI;
 
+  area = PI * lens_radius * lens_radius;
+
   return Vector3D(
-    r * closest.radius * cos(theta),
-    r * closest.radius * sin(theta),
+    r * lens_radius * cos(theta),
+    r * lens_radius * sin(theta),
     closest.center - closest.radius
   );
 }

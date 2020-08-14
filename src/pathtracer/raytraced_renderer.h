@@ -75,7 +75,8 @@ public:
              string filename = "",
              double lensRadius = 0.25,
              double focalDistance = 4.7,
-             int lens_flare_max_reflection = 100);
+             size_t lens_flare_max_reflection = 100,
+             size_t lens_flare_samples = 10000000);
 
   /**
    * Destructor.
@@ -241,7 +242,8 @@ public:
   size_t tilesDone;
   size_t tilesTotal;
 
-  int lens_flare_max_reflection;
+  size_t lens_flare_max_reflection;
+  size_t lens_flare_samples;
 
   // Visualizer Controls //
 

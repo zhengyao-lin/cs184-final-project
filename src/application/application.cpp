@@ -35,7 +35,8 @@ Application::Application(AppConfig config, bool gl) {
     config.pathtracer_filename,
     config.pathtracer_lensRadius,
     config.pathtracer_focalDistance,
-    config.lens_flare_max_reflection
+    config.lens_flare_max_reflection,
+    config.lens_flare_samples
   );
   filename = config.pathtracer_filename;
 }
@@ -348,7 +349,7 @@ GLScene::SceneObject *Application::init_polymesh(
 }
 
 void Application::set_scroll_rate() {
-  scroll_rate = canonical_view_distance;
+  scroll_rate = canonical_view_distance / 100;
 }
 
 void Application::init_material(MaterialInfo& material) {

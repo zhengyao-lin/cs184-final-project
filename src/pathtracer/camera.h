@@ -92,7 +92,7 @@ class Camera {
   bool generate_ray_for_thin_lens(Ray &ray, double &coeff, double x, double y) const;
   bool generate_ray_for_compound_lens(Ray &ray, double &coeff, double x, double y) const;
 
-  CameraModel model = CameraModel::PINHOLE;
+  CameraModel model = CameraModel::COMPOUND_LENS;
 
   // parameters for the thin lens model
   double lensRadius;

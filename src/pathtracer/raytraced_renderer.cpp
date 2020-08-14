@@ -48,7 +48,8 @@ RaytracedRenderer::RaytracedRenderer(size_t ns_aa,
                        string filename,
                        double lensRadius,
                        double focalDistance,
-                       int lens_flare_max_reflection) {
+                       size_t lens_flare_max_reflection,
+                       size_t lens_flare_samples) {
   state = INIT;
 
   pt = new PathTracer();
@@ -85,6 +86,7 @@ RaytracedRenderer::RaytracedRenderer(size_t ns_aa,
   workerThreads.resize(numWorkerThreads);
 
   this->lens_flare_max_reflection = lens_flare_max_reflection;
+  this->lens_flare_samples = lens_flare_samples;
 }
 
 /**
@@ -692,7 +694,7 @@ void RaytracedRenderer::worker_thread() {
 
   WorkItem work;
 
-  pt->lens_flare(frameBuffer, frame_w, frame_h);
+  pt->lens_flare(lens_flare_samples, frameBuffer, frame_w, frame_h);
   pt->write_to_framebuffer(frameBuffer, 0, 0, frame_w, frame_h);
 
   // while (continueRaytracing && workQueue.try_get_work(&work)) {

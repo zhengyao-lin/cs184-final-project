@@ -41,7 +41,7 @@ struct Lens {
   float focus_depth(float d) const;
 
   Vector3D back_lens_sample() const;
-  Vector3D front_lens_sample() const;
+  Vector3D front_lens_sample(double &area) const;
 
   mutable std::vector<LensElement> elts;
   mutable std::vector<LensElement> backward_elts;
