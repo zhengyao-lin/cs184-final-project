@@ -90,7 +90,7 @@ class Camera {
   bool generate_ray(Ray &ray, double &coeff, double x, double y) const;
   bool generate_ray_for_pinhole(Ray &ray, double &coeff, double x, double y) const;
   bool generate_ray_for_thin_lens(Ray &ray, double &coeff, double x, double y) const;
-  bool generate_ray_for_compound_lens(Ray &ray, double &coeff, double x, double y) const;
+  bool generate_ray_for_compound_lens(Ray &ray, double &coeff, double x, double y, int color) const;
 
   CameraModel model = CameraModel::PINHOLE;
 

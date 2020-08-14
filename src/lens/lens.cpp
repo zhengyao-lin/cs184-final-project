@@ -74,7 +74,47 @@ bool LensElement::pass_through(Ray &r, double &prev_ior, double aperture_overrid
   double cos_theta_i = fabs(dot(r.d, normal));
 
   // https://cs184.eecs.berkeley.edu/sp18/lecture/materials/slide_018
-  double k = prev_ior / ior;
+  double real_ior = 1;
+  //cout<<dis<<endl;
+  double wavelength = 0.5876;
+  if(dis != 0) {
+      std::default_random_engine ran_x;
+      unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
+      ran_x.seed(seed1);
+      std::normal_distribution<double> distributionR(0.6, 0.025);
+      std::normal_distribution<double> distributionG(0.55, 0.025);
+      std::normal_distribution<double> distributionB(0.45, 0.015);
+      //cout<<r.color<<endl;
+      switch (r.color) {
+          case 1:
+              wavelength = distributionR(ran_x);
+              //wavelength = 0.6;
+              //cout<<wavelength<<endl;
+              break;
+          case 2:
+              wavelength = distributionG(ran_x);
+              //wavelength = 0.55;
+              break;
+          case 3:
+              wavelength = distributionB(ran_x);
+              //wavelength = 0.45;
+              break;
+      }
+
+      //double wavelength = 0;
+      double w2 = wavelength * wavelength;
+      //cout<<w2<<endl;
+      real_ior = sqrt(1 + ((B1 * w2) / (w2 - C1)) + ((B2 * w2) / (w2 - C2)) + ((B3 * w2) / (w2 - C3)));
+
+      /*if(ior == 1) {
+          cout << "#real: " << real_ior << "ior: " << ior << endl;
+      }*/
+  } else {
+      real_ior = ior;
+  }
+        //real_ior = ior;
+  //cout<<real_ior<<dis<<endl;
+  double k = prev_ior / real_ior;
   double sin_theta_o_2 = k * k * (1 - cos_theta_i * cos_theta_i);
 
   // total internal reflection
@@ -90,14 +130,25 @@ bool LensElement::pass_through(Ray &r, double &prev_ior, double aperture_overrid
   
   r.o = p_intersect;
 
-  // printf("refract from (%lf, %lf, %lf) to (%lf, %lf, %lf)\n", old_direction.x, old_direction.y, old_direction.z, r.d.x, r.d.y, r.d.z);
+  prev_ior = real_ior;
+  r.wavelength = wavelength;
 
+  // printf("refract from (%lf, %lf, %lf) to (%lf, %lf, %lf)\n", old_direction.x, old_direction.y, old_direction.z, r.d.x, r.d.y, r.d.z);
   return true;
+
 }
 
 /****** Lens functions ******/
 
 void Lens::parse_lens_file(std::string filename) {
+
+    Dispersion BK7 = Dispersion(1.03961212, 0.231792344, 1.01046945, 0.00600069867, 0.0200179144, 103.560653, 1.5168);
+    Dispersion SCHOTT_MP = Dispersion(1.3182408, 0.0244, 1.08915181, 0.00879, 0.0609, 110, 1.5424);
+    Dispersion SCHOTT_SF = Dispersion(1.55912923, 0.284246288, 0.968842926, 0.0121481001, 0.0534549042, 112.174809, 1.7174);
+    Dispersion OHARA_NBM = Dispersion(1.37023101, 0.177665568, 1.30515471, 0.00871920342, 0.0405725552, 112.703058, 1.6134);
+    Dispersion SCHOTT_SK = Dispersion(1.28189012, 0.257738258, 0.96818604, 0.0072719164, 0.0242823527, 110.377773, 1.6074);
+    Dispersion OHARA_NPH = Dispersion(1.75156623, 0.364006304, 2.47874141, 0.0135004681, 0.0668245147, 170.756006, 1.8081);
+    Dispersion SF11 = Dispersion(1.73759695, 0.313747346, 1.89878101, 0.013188707, 0.0623068142, 155.23629, 1.7847);
 
   ifstream infile(filename);
   string line;
@@ -116,13 +167,45 @@ void Lens::parse_lens_file(std::string filename) {
     stringstream ss(line);
     LensElement lens;
     double offset;
-    ss >> lens.radius >> offset >> lens.ior >> lens.aperture;
+    //double temp;
+    lens.dis = 0;
+    ss >> lens.radius >> offset >> lens.ior >> lens.aperture >> lens.dis;
+    //cout<<temp<<endl;
     lens.center = z_coord;
     if (!lens.radius) {
       z_ap = z_coord;
     }
     z_coord += offset;
+      switch (lens.dis) {
+          case 0:
+              break;
+          case 1:
+              lens.set_dis(BK7);
+              break;
+          case 2:
+              lens.set_dis(SCHOTT_MP);
+              break;
+          case 3:
+              lens.set_dis(SCHOTT_SF);
+              break;
+          case 4:
+              lens.set_dis(OHARA_NBM);
+              break;
+          case 5:
+              lens.set_dis(SCHOTT_SK);
+              break;
+          case 6:
+              lens.set_dis(OHARA_NPH);
+              break;
+          case 7:
+              lens.set_dis(SF11);
+              break;
+
+      }
+      //lens.m_n =
+
     backward_elts.push_back(lens);
+
   }
   for (int i = backward_elts.size() - 1; i >= 0; --i) {
     backward_elts[i].center = (backward_elts[i].center - z_ap) + backward_elts[i].radius;
@@ -144,7 +227,8 @@ void Lens::parse_lens_file(std::string filename) {
   // Get infinity and close focus depths, also get focal length.
   set_focus_params();
   // Focus at infinity to start.
-  sensor_depth = infinity_focus;
+  //sensor_depth = infinity_focus;
+        sensor_depth = 46.2;
        
 }
 
@@ -156,6 +240,7 @@ void Lens::set_focus_params() {
   // should be set correctly.
 
   // TODO: the y coordinate is hard-coded now
+
   double height = ap_original / 2 / 5;
 
   // estimate the infinity focus
@@ -187,6 +272,8 @@ void Lens::set_focus_params() {
   cout << "[Lens] Infinity focus depth is " << infinity_focus << endl;
   cout << "[Lens] Close focus depth is " << near_focus << endl;
   cout << "[Lens] True focal length is " << focal_length << endl;
+
+
 }
 
 bool Lens::trace(Ray &r, std::vector<Vector3D> *trace, double f_stop) const {
@@ -195,10 +282,9 @@ bool Lens::trace(Ray &r, std::vector<Vector3D> *trace, double f_stop) const {
 
   for (auto &elem: elts) {
     if (!elem.pass_through(r, current_ior, f_stop != 0 ? f_stop * infinity_focus : 0)) return false;
-    current_ior = elem.ior;
+    //current_ior = elem.ior;
     if (trace) trace->push_back(r.o);
   }
-
   return true;
 }
 

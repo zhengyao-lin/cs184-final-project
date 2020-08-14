@@ -8,12 +8,35 @@
 
 #include <string>
 #include <vector>
+#include <random>
+
 
 #include "pathtracer/ray.h"
 
 namespace CGL {
 
 // abstraction for a surface in the lens system
+
+    struct Dispersion {
+    public:
+        Dispersion(double a, double b, double c, double d, double e, double f, double g) {
+            B1 = a;
+            B2 = b;
+            B3 = c;
+            C1 = d;
+            C2 = e;
+            C3 = f;
+            n = g;
+        }
+        double B1;
+        double B2;
+        double B3;
+        double C1;
+        double C2;
+        double C3;
+        double n;
+    };
+
 struct LensElement {
 public:
   bool pass_through(Ray &r, double &prev_ior, double aperture_override) const;
@@ -23,7 +46,28 @@ public:
   double radius;
   double ior;
   double aperture;
+  int dis;
+  double B1;
+  double B2;
+  double B3;
+  double C1;
+  double C2;
+  double C3;
+  //int m_n;
+  //std::default_random_engine ran_x;
+
+  void set_dis (Dispersion d) {
+      B1 = d.B1;
+      B2 = d.B2;
+      B3 = d.B3;
+      C1 = d.C1;
+      C2 = d.C2;
+      C3 = d.C3;
+      ior = d.n;
+  }
+  //Dispersion dispersion;
 };
+
 
 struct Lens {
   Lens(std::string filename) { parse_lens_file(filename); }
@@ -46,6 +90,11 @@ struct Lens {
   double ap_radius, ap_original;
   size_t ap_i;
   double sensor_depth;
+
+  //std::vector<Dispersion> dis;
+
+
+
 };
 }
 

@@ -26,6 +26,7 @@ struct Ray {
   mutable double min_t; ///< treat the ray as a segment (ray "begin" at min_t)
   mutable double max_t; ///< treat the ray as a segment (ray "ends" at max_t)
   double wavelength; // in nm
+  int color = 0;
 
   Vector3D inv_d;  ///< component wise inverse
   int sign[3];     ///< fast ray-bbox intersection

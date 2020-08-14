@@ -274,12 +274,16 @@ Spectrum PathTracer::est_radiance_global_illumination(const Ray &r) {
 
   // TODO (Part 4): Accumulate the "direct" and "indirect"
   // parts of global illumination into L_out rather than just direct
+  Spectrum out;
 
   if (max_ray_depth == 0) {
-    return zero_bounce_radiance(r, isect);
+    out = zero_bounce_radiance(r, isect);
+      return out;
   }
 
-  return zero_bounce_radiance(r, isect) + at_least_one_bounce_radiance(r, isect);
+  out = zero_bounce_radiance(r, isect) + at_least_one_bounce_radiance(r, isect);
+
+    return out;
 }
 
 void PathTracer::raytrace_pixel(size_t x, size_t y) {
@@ -300,51 +304,122 @@ void PathTracer::raytrace_pixel(size_t x, size_t y) {
   float sum_illum = 0, sum_sq_illum = 0;
 
   int i = 0;
-  for (; i < num_samples;) {
-    int actual_num_samples = 0;
+  if (camera->model == CameraModel::COMPOUND_LENS) {
+      for (; i < num_samples;) {
+          for(int color = 1; color <= 3; color += 1) {
+              int actual_num_samples = 0;
 
-    for (int j = 0; j < samplesPerBatch && i + j < num_samples; j++) {
-      // pdf at each point is just 1 so no need to divide
-      Vector2D sample = origin + gridSampler->get_sample();
+              for (int j = 0; j < samplesPerBatch && i + j < num_samples; j++) {
+                  // pdf at each point is just 1 so no need to divide
+                  Vector2D sample = origin + gridSampler->get_sample();
 
-      // normalize sample position
-      Ray ray; double coeff;
-      Spectrum sample_radiance;
+                  // normalize sample position
+                  Ray ray;
+                  double coeff;
+                  Spectrum sample_radiance;
 
-      // keep trying until a ray successfully passes through
-      // or the max nmuber of attempts is reached
-      // TODO: remove hardcoded number of attempts;
-      int attempts = 0;
-      while (!camera->generate_ray(ray, coeff, sample.x / sampleBuffer.w, sample.y / sampleBuffer.h) &&
-             ++attempts < 20);
+                  // keep trying until a ray successfully passes through
+                  // or the max nmuber of attempts is reached
+                  // TODO: remove hardcoded number of attempts;
+                  int attempts = 0;
+                  while (!camera->generate_ray_for_compound_lens(ray, coeff, sample.x / sampleBuffer.w, sample.y / sampleBuffer.h, color) &&
+                         ++attempts < 20);
 
-      sample_radiance = est_radiance_global_illumination(ray) * coeff;
-      sum += sample_radiance;
-      
-      float illum = sample_radiance.illum();
-      sum_illum += illum;
-      sum_sq_illum += illum * illum;
+                  sample_radiance = est_radiance_global_illumination(ray) * coeff;
 
-      actual_num_samples++;
-    }
 
-    i += actual_num_samples;
+                      switch (color) {
+                          case 1:
+                              sample_radiance.r *= 3;
+                              sample_radiance.g = 0;
+                              sample_radiance.b = 0;
+                              break;
+                          case 2:
+                              sample_radiance.r = 0;
+                              sample_radiance.g *= 3;
+                              sample_radiance.b = 0;
+                              break;
+                          case 3:
+                              sample_radiance.r = 0;
+                              sample_radiance.g = 0;
+                              sample_radiance.b *= 3;
+                              break;
+                      }
 
-    // adaptive sampling
-    float one_over_n = 1 / (float)i;
-    float mean = sum_illum * one_over_n;
-    float unbiased_variance = (1 / (float)(i - 1)) * (sum_sq_illum - sum_illum * sum_illum * one_over_n);
-    float I = 1.96 * sqrt(unbiased_variance * one_over_n);
+                  sum += sample_radiance;
 
-    if (I <= maxTolerance * mean) {
-      // pixel converged
-      break;
-    }
+                  float illum = sample_radiance.illum();
+                  sum_illum += illum;
+                  sum_sq_illum += illum * illum;
+
+                  actual_num_samples++;
+              }
+
+              i += actual_num_samples;
+
+              // adaptive sampling
+              float one_over_n = 1 / (float) i;
+              float mean = sum_illum * one_over_n;
+              float unbiased_variance = (1 / (float) (i - 1)) * (sum_sq_illum - sum_illum * sum_illum * one_over_n);
+              float I = 1.96 * sqrt(unbiased_variance * one_over_n);
+
+              if (I <= maxTolerance * mean) {
+                  // pixel converged
+                  break;
+              }
+          }
+      }
+
+  } else {
+      for (; i < num_samples;) {
+              int actual_num_samples = 0;
+
+              for (int j = 0; j < samplesPerBatch && i + j < num_samples; j++) {
+                  // pdf at each point is just 1 so no need to divide
+                  Vector2D sample = origin + gridSampler->get_sample();
+
+                  // normalize sample position
+                  Ray ray;
+                  double coeff;
+                  Spectrum sample_radiance;
+
+                  // keep trying until a ray successfully passes through
+                  // or the max nmuber of attempts is reached
+                  // TODO: remove hardcoded number of attempts;
+                  int attempts = 0;
+                  while (!camera->generate_ray(ray, coeff, sample.x / sampleBuffer.w, sample.y / sampleBuffer.h) &&
+                         ++attempts < 20);
+
+                  sample_radiance = est_radiance_global_illumination(ray) * coeff;
+                  sum += sample_radiance;
+
+                  float illum = sample_radiance.illum();
+                  sum_illum += illum;
+                  sum_sq_illum += illum * illum;
+
+                  actual_num_samples++;
+              }
+
+              i += actual_num_samples;
+
+              // adaptive sampling
+              float one_over_n = 1 / (float) i;
+              float mean = sum_illum * one_over_n;
+              float unbiased_variance = (1 / (float) (i - 1)) * (sum_sq_illum - sum_illum * sum_illum * one_over_n);
+              float I = 1.96 * sqrt(unbiased_variance * one_over_n);
+
+              if (I <= maxTolerance * mean) {
+                  // pixel converged
+                  break;
+              }
+
+      }
   }
   Spectrum temp = sum * (1 / (double)i);
   sampleBuffer.update_pixel(temp, x, y);
   temp_sample = temp;
   sampleCountBuffer[x + y * sampleBuffer.w] = i;
+  //cout<<camera->lenses[camera->current_lens].backward_elts[1].dis<<endl;
 }
 
 void PathTracer::cell_sample(Vector2D loc, vector<Spectrum> *out) {

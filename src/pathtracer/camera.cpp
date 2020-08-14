@@ -213,7 +213,7 @@ bool Camera::generate_ray(Ray &ray, double &coeff, double x, double y) const {
     case CameraModel::THIN_LENS:
       return generate_ray_for_thin_lens(ray, coeff, x, y);
     case CameraModel::COMPOUND_LENS:
-      return generate_ray_for_compound_lens(ray, coeff, x, y);
+      return generate_ray_for_compound_lens(ray, coeff, x, y, 0);
   }
   assert(false && "unexpected camera model");
 }
@@ -294,7 +294,7 @@ bool Camera::generate_ray_for_thin_lens(Ray &ray, double &coeff, double x, doubl
   return true;
 }
 
-bool Camera::generate_ray_for_compound_lens(Ray &ray, double &coeff, double x, double y) const {
+bool Camera::generate_ray_for_compound_lens(Ray &ray, double &coeff, double x, double y, int color) const {
   const Lens *lens = get_current_lens();
   assert(lens && "no current lens");
 
@@ -324,6 +324,9 @@ bool Camera::generate_ray_for_compound_lens(Ray &ray, double &coeff, double x, d
   coeff = direction.z;
   coeff *= coeff;
   coeff *= coeff;
+
+  ray.color = color;
+  sensor_ray.color = color;
 
   // trace the sensor ray through the compound lens
   if (!lens->trace(sensor_ray, NULL, lensRadius /* using as f-stop here */)) {
