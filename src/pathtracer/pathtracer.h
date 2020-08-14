@@ -112,12 +112,13 @@ namespace CGL {
                     out = vector<Spectrum>();
                     cell_sample(loc, &out);
                     temp_var = calc_var(&out);
-                    std::cout<<temp_var<<std::endl;
+                    //std::cout<<temp_var<<std::endl;
+                    std::cout<<temp_p<<std::endl;
                     if (temp_var > max_var) {
                         max_var = temp_var;
                         max_pos = temp_p;
                         temp_x = x;
-                        std::cout<<"max^^"<<std::endl;
+                        //std::cout<<"max^^"<<std::endl;
                     }
                 }
                 std::cout<<"yoyoyo"<<std::endl;
@@ -127,12 +128,13 @@ namespace CGL {
                     out = vector<Spectrum>();
                     cell_sample(loc, &out);
                     temp_var = calc_var(&out);
-                    std::cout<<temp_var<<std::endl;
+                    //std::cout<<temp_var<<std::endl;
+                    std::cout<<temp_p<<std::endl;
                     if (temp_var > max_var) {
                         max_var = temp_var;
                         max_pos = temp_p;
                         //temp_x = x;
-                        std::cout<<"max^^"<<std::endl;
+                        //std::cout<<"max^^"<<std::endl;
                     }
                 }
 
